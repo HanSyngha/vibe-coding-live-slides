@@ -1,0 +1,12 @@
+services:
+  vibe-coding-live-slides:
+    build: .
+    container_name: vibe-coding-live-slides
+    ports:
+      - "${HOST_PORT:-7007}:8080"
+    environment:
+      - TZ=Asia/Seoul
+      - PORT=8080
+      - PRESENT_KEY=${PRESENT_KEY:-change-me}
+      - SALES_DELAY_MS=${SALES_DELAY_MS:-500}
+    restart: unless-stopped

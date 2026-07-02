@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>바이브 코딩 개론 · Live</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- animated background -->
+  <div class="bg-mesh"><i class="m1"></i><i class="m2"></i><i class="m3"></i><i class="m4"></i></div>
+  <div class="bg-grid"></div>
+
+  <!-- progress -->
+  <div class="topbar"><i id="progbar"></i></div>
+
+  <!-- reaction tally -->
+  <div id="tally">
+    <div class="tchip presence-chip hidden" id="presence-chip" title="클릭해서 접속자 보기">👥 <span class="tc-num" id="presence-num">0</span></div>
+    <div class="tchip nick-chip hidden" id="nick-chip" title="클릭해서 닉네임 수정"></div>
+    <div class="tchip" id="chip-up">👍 <span class="tc-num" id="tup">0</span></div>
+    <div class="tchip" id="chip-conf">🤔 <span class="tc-num" id="tconf">0</span></div>
+  </div>
+  <!-- presence list dropdown (top-right, under the chip) -->
+  <div id="presence-list" class="hidden"></div>
+
+  <!-- mode tags -->
+  <div class="pres-tag hidden" id="pres-tag">🎤 PRESENTER</div>
+
+  <!-- audience follow toggle (top-left) -->
+  <div class="follow-toggle hidden" id="follow-toggle">
+    <button class="btn a-nav" id="a-prev" title="이전">‹</button>
+    <span class="follow-page" id="follow-state">1 / 1</span>
+    <button class="btn a-nav" id="a-next" title="다음">›</button>
+    <button class="follow-btn on" id="follow-btn">🔗 강사 따라가기 ON</button>
+    <span class="behind-nudge hidden" id="behind-nudge"></span>
+  </div>
+
+  <!-- slide stage -->
+  <main id="stage"><section id="slide" class="slide"></section></main>
+
+  <!-- overlays -->
+  <div id="qlayer"></div>
+  <div id="reactlayer"></div>
+
+  <!-- audience dock -->
+  <div id="dock" class="hidden">
+    <div class="dock-inner">
+      <input id="qinput" type="text" placeholder="질문을 입력하면 화면에 떠올라요…" maxlength="280">
+      <button class="btn" id="sendq">질문 ✦</button>
+      <button class="btn react-btn" id="react-up" title="좋아요">👍</button>
+      <button class="btn react-btn" id="react-conf" title="이해 안 가요">🤔</button>
+    </div>
+  </div>
+
+  <!-- presenter controls -->
+  <div id="presenter" class="hidden">
+    <button class="btn react-btn nav" id="prev">‹</button>
+    <span class="pinfo" id="pinfo">1 / 1</span>
+    <button class="btn react-btn nav" id="next">›</button>
+    <button class="btn" id="tocbtn">목차 📑</button>
+    <button class="btn" id="histbtn">질문 기록 📜</button>
+    <button class="btn" id="fbbtn">피드백 📊</button>
+  </div>
+
+  <!-- presenter slide tree / table of contents -->
+  <div id="toc" class="hidden">
+    <div class="qh-head">
+      <span>📑 목차</span>
+      <button class="btn" id="toc-close">✕</button>
+    </div>
+    <div id="toc-list" class="toc-list"></div>
+  </div>
+
+  <!-- presenter question history panel -->
+  <div id="qhistory" class="hidden">
+    <div class="qh-head">
+      <span>📜 질문 기록 <span id="qh-count">0</span></span>
+      <div class="qh-head-btns">
+        <button class="btn danger" id="clearq">전체 정리 🧹</button>
+        <button class="btn" id="qh-close">✕</button>
+      </div>
+    </div>
+    <div id="qh-list" class="qh-list"></div>
+  </div>
+
+  <!-- connection indicator -->
+  <div id="conn"><span class="cdot"></span><span>LIVE</span></div>
+
+  <!-- nickname modal (audience: first visit + edit) -->
+  <div id="nick" class="hidden">
+    <div class="nick-card">
+      <div class="nemoji">👋</div>
+      <h2 id="nick-title">닉네임을 정해주세요</h2>
+      <p id="nick-desc">질문에 이 이름이 함께 표시돼요</p>
+      <div class="avatar-row" id="avatar-row"></div>
+      <input id="nickinput" type="text" placeholder="예: 한승하" maxlength="24" autocomplete="off">
+      <button class="btn" id="nickgo">입장하기 →</button>
+      <button class="nick-cancel hidden" id="nickcancel">취소</button>
+    </div>
+  </div>
+
+  <!-- feedback modal (audience, closing slide) -->
+  <div id="feedback" class="hidden">
+    <div class="fb-card">
+      <div class="fb-emoji">📝</div>
+      <h2>강의 피드백</h2>
+      <p>별점으로 평가해 주세요 (1~5)</p>
+      <div class="fb-q"><label>이 내용이 현업에 도움이 될 것 같나요?</label><div class="stars" data-q="q1"></div></div>
+      <div class="fb-q"><label>난이도는 적절했나요?</label><div class="stars" data-q="q2"></div></div>
+      <div class="fb-q"><label>바이브코딩·Claude Code·AI를 더 알게 되었나요?</label><div class="stars" data-q="q3"></div></div>
+      <textarea id="fb-text" placeholder="자유롭게 의견을 남겨주세요 (선택)" maxlength="500"></textarea>
+      <div class="fb-actions">
+        <button class="nick-cancel" id="fb-cancel">닫기</button>
+        <button class="btn" id="fb-submit">제출하기 →</button>
+      </div>
+      <div class="fb-thanks hidden" id="fb-thanks">🙏 소중한 피드백 감사합니다!</div>
+    </div>
+  </div>
+
+  <!-- feedback summary (presenter) -->
+  <div id="fbsummary" class="hidden">
+    <div class="qh-head">
+      <span>📊 피드백 <span id="fbs-count">0</span>건</span>
+      <div class="qh-head-btns">
+        <button class="btn danger" id="fbs-clear">초기화 🗑️</button>
+        <button class="btn" id="fbs-close">✕</button>
+      </div>
+    </div>
+    <div id="fbs-body" class="qh-list"></div>
+  </div>
+
+  <script src="/slides.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
