@@ -53,6 +53,25 @@ window.SLIDES = [
       </div>`
   },
 
+  /* 오늘의 강의 주제 */
+  {
+    note: `<b>오늘의 주제 안내.</b><ul><li>두 질문으로 묶어주세요: ①바이브 코딩이란 무엇인가 ②그것이 SaaS에 미치는 영향을 어떻게 볼 것인가</li><li>기대치 조정: <b>딥다이브가 아니라</b> 기초 개념 + 개인적 견해 위주 — 부담 없이 질문·Slack 환영</li><li>블로그(syngha.com)는 온보딩 이후 업데이트 예정. 다음은 PART 1 — AI란 무엇인가.</li></ul>`,
+    html: `
+      <h2><span class="dot"></span> 오늘의 강의 주제 🎯</h2>
+      <div class="sbody">
+        <div class="topic-q">
+          <div class="tq-card"><div class="tq-n">Q1</div><div class="tq-t">바이브 코딩은 <b>무엇인가?</b></div></div>
+          <div class="tq-amp">&</div>
+          <div class="tq-card hot"><div class="tq-n">Q2</div><div class="tq-t">그것이 <b>SaaS에 미치는 영향</b>을<br>어떻게 봐야 하는가?</div></div>
+        </div>
+        <div class="topic-note">
+          <p>AI에 대해선 이야기하고 싶은 게 <b>너무나도 많습니다.</b> 오늘 세션은 딥다이브보다 — <b>기초 개념과 개인적 견해</b> 위주로 진행됩니다.</p>
+          <p>더 깊게 궁금한 게 있다면 <b>언제든 바로 질문</b>하시거나, <b>Slack</b> 부탁드려요 💬</p>
+          <p class="topic-ps">ps. <b>syngha.com</b> 블로그도 온보딩 기간 이후 종종 업데이트하려 합니다 ✍️</p>
+        </div>
+      </div>`
+  },
+
   /* ═══════════════════════════════ PART 1 divider */
   {
     cls: 'slide-section',
@@ -124,26 +143,114 @@ window.SLIDES = [
       </div>`
   },
 
+  /* 반전 · 확률기계라서 오히려 강력하다 (카파시 — 지식의 압축 도서관) */
+  {
+    note: `<b>핵심 반전 슬라이드.</b> 앞에서 "확률 기계라 틀린다"고 했는데, 여기서 뒤집습니다.<ul><li>카파시 비유: LLM = 인류 지식을 압축한 <b>거대한 도서관</b></li><li>질문을 던지면 — 도서관이 <b>가장 알맞은 책(확률 높은 답)</b>을 골라 던져준다</li><li>인류의 언어·행동이 패턴화돼 있어서, "가장 그럴듯한 다음 단어"만으로도 대부분 재현된다</li><li>결론: 확률이라 <b>약한 게 아니라</b> 패턴을 압축했기에 <b>강력</b>하다</li></ul>`,
+    html: `
+      <h2><span class="dot"></span> 그런데 — 확률 기계라서 <u>오히려 강력하다</u> 💡</h2>
+      <div class="sbody">
+        <div class="punch-line"><span class="kfan" title="Tesla → OpenAI → Anthropic"><img src="/avatars/tesla.svg" alt="Tesla"><img src="/avatars/openai.svg" alt="OpenAI"><img src="/avatars/claude.svg" alt="Anthropic"></span> 안드레 카파시: LLM은 <b>"인류 지식을 압축한 거대한 도서관"</b></div>
+        <div class="library">
+          <div class="lib-q">💬<span>질문</span></div>
+          <div class="lib-arrow a1">➜</div>
+          <div class="lib-shelf">
+            <div class="shelf-row">${Array.from({length:11}).map((_,i)=>`<i class="bk c${i%5}${i===7?' pick p1':''}"></i>`).join('')}</div>
+            <div class="shelf-row">${Array.from({length:11}).map((_,i)=>`<i class="bk c${(i+2)%5}${i===3?' pick p2':''}"></i>`).join('')}</div>
+            <div class="shelf-row">${Array.from({length:11}).map((_,i)=>`<i class="bk c${(i+4)%5}${i===9?' pick p3':''}"></i>`).join('')}</div>
+            <div class="lib-label">📚 거대한 지식 도서관 (압축된 인류의 글)</div>
+          </div>
+          <div class="lib-arrow a2">➜</div>
+          <div class="lib-a">✨<span>가장 알맞은<br>답이 날아온다</span></div>
+        </div>
+        <div class="debrief-list">
+          <div class="dl hot">🎯 인류의 언어·행동은 <b>패턴화</b>돼 있어 — "가장 옳을 확률 높은" 단어만 이어도 대부분 재현된다</div>
+        </div>
+        <div class="punch-line hot">확률이라 <b>약한 게 아니라</b> — 인류의 패턴을 압축했기에 <b>강력한 것</b></div>
+      </div>`
+  },
+
   /* ═══════════════════════════════ PART 2 divider */
   {
     cls: 'slide-section',
     html: `<div class="sec-wrap"><div class="sec-num">02</div><div class="sec-meta"><div class="sec-eyebrow">PART TWO</div><h1>AI는 어떻게 발전해왔나</h1><p>더 큰 모델 → 효율적인 모델 → 모델 + 툴</p></div></div>`
   },
 
-  /* 1막: 더 큰 모델 */
+  /* 1막: 더 큰 모델 — 시간×크기 산점도에 모델 로고가 시간순으로 촥촥 찍힘 */
   {
+    note: `<b>PART2 발전사 1막.</b><ul><li>가로=출시 시점, 세로=모델 크기(파라미터, 로그 스케일). 로고 점이 <b>시간순으로 찍히며</b> 우상향으로 커져온 흐름을 보여줍니다</li><li><b>실선 점 = 공개된 크기</b>, <b>속 빈 점 = 예상치(비공개)</b> — Claude·GPT·Gemini는 크기를 공개 안 해서 예상으로 표기</li><li>핵심: "더 똑똑 = 더 크게"가 정설이었고, 비용이 <b>기하급수</b>로 폭증 → 소수 빅테크만 가능. 다음은 이 판을 뒤집은 딥시크.</li></ul>`,
     html: `
       <h2><span class="dot"></span> 1막 · "더 똑똑하게 = 더 크게"</h2>
       <div class="sbody">
-        <div class="scale-row">
-          <div class="scale-box" style="--s:.5"><b>GPT-2</b><span>작음</span></div>
-          <div class="scale-arrow">→</div>
-          <div class="scale-box" style="--s:.72"><b>GPT-3</b><span>175B</span></div>
-          <div class="scale-arrow">→</div>
-          <div class="scale-box" style="--s:1"><b>GPT-4급</b><span>초거대</span></div>
+        <div class="scatter">
+          ${(() => {
+            // x: months since 2022-01 (range to 2026-07 = 54). y: log10(params in B).
+            // 공개(disclosed) 크기만 — 근거 있는 점만 찍는다. MoE는 total 파라미터.
+            const models=[
+              {n:'GPT-3',lg:'openai',t:'2022-06',b:175,d:1},
+              {n:'PaLM',lg:'gemini',t:'2022-04',b:540,d:1},
+              {n:'GLM-130B',lg:'glm',ext:'png',t:'2022-08',b:130,d:1},
+              {n:'LLaMA',lg:'meta',t:'2023-02',b:65,d:1},
+              {n:'Llama 2',lg:'meta',t:'2023-07',b:70,d:1},
+              {n:'Qwen 72B',lg:'qwen',t:'2023-09',b:72,d:1},
+              {n:'Grok-1',lg:'xai',t:'2023-11',b:314,d:1},
+              {n:'DS 67B',lg:'deepseek',t:'2023-11',b:67,d:1},
+              {n:'Mixtral',lg:'mistral',t:'2023-12',b:47,d:1},
+              {n:'DBRX',lg:'databricks',t:'2024-03',b:132,d:1},
+              {n:'Qwen1.5',lg:'qwen',t:'2024-04',b:110,d:1},
+              {n:'Mixtral 8x22',lg:'mistral',t:'2024-04',b:141,d:1},
+              {n:'Llama 3',lg:'meta',t:'2024-04',b:70,d:1},
+              {n:'Command R+',lg:'cohere',t:'2024-04',b:104,d:1},
+              {n:'DS-V2',lg:'deepseek',t:'2024-05',b:236,d:1},
+              {n:'Mistral L2',lg:'mistral',t:'2024-07',b:123,d:1},
+              {n:'Llama 3.1',lg:'meta',t:'2024-07',b:405,d:1},
+              {n:'Qwen2.5',lg:'qwen',t:'2024-09',b:72,d:1},
+              {n:'DS-V3',lg:'deepseek',t:'2024-12',b:671,d:1},
+              {n:'MiniMax-01',lg:'minimax',t:'2025-01',b:456,d:1},
+              {n:'DS-R1',lg:'deepseek',t:'2025-01',b:671,d:1},
+              {n:'Qwen3',lg:'qwen',t:'2025-04',b:235,d:1},
+              {n:'Llama 4',lg:'meta',t:'2025-04',b:400,d:1},
+              {n:'MiniMax-M1',lg:'minimax',t:'2025-06',b:456,d:1},
+              {n:'GLM-4.5',lg:'glm',ext:'png',t:'2025-07',b:355,d:1},
+              {n:'Kimi K2',lg:'kimi',t:'2025-07',b:1000,d:1},
+              {n:'Qwen3-Max',lg:'qwen',t:'2025-09',b:1000,d:1},
+              {n:'GLM-4.6',lg:'glm',ext:'png',t:'2025-09',b:357,d:1},
+              {n:'DS-V3.2',lg:'deepseek',t:'2025-09',b:685,d:1},
+              {n:'Mistral L3',lg:'mistral',t:'2025-11',b:675,d:1}, // HF: Mistral-Large-3-675B
+              {n:'Llama 4 Behemoth',lg:'meta',t:'2025-04',b:2000,d:1,pending:1}, // 발표만·미출시
+              // 2026 — HuggingFace safetensors 실측 (공개)
+              {n:'Qwen3.5',lg:'qwen',t:'2026-02',b:403,d:1},
+              {n:'DS-V4',lg:'deepseek',t:'2026-04',b:862,d:1},
+              {n:'Kimi K2.7',lg:'kimi',t:'2026-06',b:1059,d:1},
+              {n:'GLM-5',lg:'glm',ext:'png',t:'2026-06',b:754,d:1},
+            ];
+            const x0=2022, mspan=(2026+7/12)-x0;
+            const tx=(t)=>{const[y,m]=t.split('-').map(Number);return ((y+(m-1)/12)-x0)/mspan;};
+            const ly=(b)=>{const lo=Math.log10(40),hi=Math.log10(2000);return (Math.log10(b)-lo)/(hi-lo);};
+            const W=1020,H=400,PADL=54,PADR=24,PADT=22,PADB=42;
+            const px=(t)=>PADL+tx(t)*(W-PADL-PADR);
+            const py=(b)=>PADT+(1-ly(b))*(H-PADT-PADB);
+            const sorted=models.map((m,i)=>({...m,i})).sort((a,b)=>tx(a.t)-tx(b.t));
+            const grid=[100,500,1000].map(v=>`<line x1="${PADL}" y1="${py(v)}" x2="${W-PADR}" y2="${py(v)}" class="sc-grid"/><text x="${PADL-8}" y="${py(v)+4}" class="sc-yl">${v>=1000?(v/1000)+'T':v+'B'}</text>`).join('');
+            const years=[2022,2023,2024,2025,2026].map(y=>`<text x="${px(y+'-01')}" y="${H-14}" class="sc-xl">${y}</text>`).join('');
+            const dots=sorted.map((m,k)=>{
+              const cx=px(m.t),cy=py(m.b),delay=(0.12+k*0.1).toFixed(2);
+              const above=(k%2===1); const ly2=above?-16:22;
+              const tag=m.pending?' <tspan class="sc-est">미출시</tspan>':(m.d?'':' <tspan class="sc-est">예상</tspan>');
+              return `<g class="sc-pt ${(m.d&&!m.pending)?'':'est'}" style="--d:${delay}s;--x:${cx}px;--y:${cy}px">
+                <circle r="13" class="sc-halo"/>
+                <circle r="10" class="sc-disc"/>
+                <image href="/avatars/${m.lg}.${m.ext||'svg'}" x="-7.5" y="-7.5" width="15" height="15"/>
+                <text y="${ly2}" class="sc-name">${m.n}${tag}</text>
+              </g>`;
+            }).join('');
+            return `<svg viewBox="0 0 ${W} ${H}" class="sc-svg">
+              <line x1="${PADL}" y1="${H-PADB}" x2="${W-PADR}" y2="${H-PADB}" class="sc-axis"/>
+              <line x1="${PADL}" y1="${PADT}" x2="${PADL}" y2="${H-PADB}" class="sc-axis"/>
+              <text x="${PADL-40}" y="${PADT+4}" class="sc-ytitle">크기</text>
+              ${grid}${years}${dots}</svg>`;
+          })()}
         </div>
-        <div class="law-card">📐 <b>스케일링 법칙</b> — 파라미터·데이터·연산을 키울수록 성능이 오른다</div>
-        <div class="cost-warn">💸 단, 학습·운영 비용이 <b>기하급수적</b>으로 폭증 → 소수 빅테크만 가능</div>
+        <div class="cost-warn">📐 <b>스케일링 법칙</b> — 키울수록 성능↑ · 단 비용이 <b>기하급수</b>로 폭증 → 소수 빅테크만 가능 <span class="sc-legend">● 공개 크기 &nbsp; ◌ 미출시 &nbsp;·&nbsp; Claude·GPT·Gemini는 크기 비공개</span></div>
       </div>`
   },
 
@@ -152,10 +259,16 @@ window.SLIDES = [
     html: `
       <h2><span class="dot"></span> 2막 · DeepSeek 충격 — "크기 대비 똑똑하게"</h2>
       <div class="sbody">
-        <div class="shock">
-          <div class="shock-before"><span class="sb-lab">기존</span><div class="sb-big">🏗️ 무조건 크게</div><div class="sb-sub">막대한 비용</div></div>
-          <div class="shock-bolt">⚡<span>2025 DeepSeek</span></div>
-          <div class="shock-after"><span class="sb-lab hot">전환</span><div class="sb-big">🪶 작고 영리하게</div><div class="sb-sub">비용 1/10급 충격</div></div>
+        <div class="compress">
+          <div class="cmp-side"><span class="sb-lab">기존</span>
+            <div class="cmp-big">${Array.from({length:36}).map((_,i)=>`<i style="--d:${(i%12)*0.05}s"></i>`).join('')}</div>
+            <div class="sb-sub">🏗️ 무조건 크게 · 막대한 비용</div>
+          </div>
+          <div class="cmp-bolt"><span class="cmp-zap">⚡</span><span class="cmp-lab"><img class="blogo" src="/avatars/deepseek.svg" alt="">2025 DeepSeek</span><span class="cmp-arrow">압축 →</span></div>
+          <div class="cmp-side"><span class="sb-lab hot">전환</span>
+            <div class="cmp-small">${Array.from({length:36}).map((_,i)=>`<i style="--d:${(i%12)*0.05}s"></i>`).join('')}</div>
+            <div class="sb-sub hot">🪶 작고 영리하게 · 비용 1/10급</div>
+          </div>
         </div>
         <div class="tech-chips">
           <span>MoE · 전문가 혼합</span><span>Distillation · 증류</span><span>Quantization · 경량화</span>
@@ -190,14 +303,14 @@ window.SLIDES = [
           <div class="mt-card model">
             <div class="mt-tag">MODEL · 모델</div>
             <div class="mt-ico">🧠</div>
-            <div class="mt-name"><img class="blogo" src="/avatars/claude.svg" alt="">Claude · <img class="blogo" src="/avatars/openai.svg" alt="">GPT · <img class="blogo" src="/avatars/gemini.svg" alt="">Gemini</div>
+            <div class="mt-name"><span class="brand"><img class="blogo" src="/avatars/claude.svg" alt="">Claude</span> · <span class="brand"><img class="blogo" src="/avatars/openai.svg" alt="">GPT</span> · <span class="brand"><img class="blogo" src="/avatars/gemini.svg" alt="">Gemini</span></div>
             <div class="mt-desc">"두뇌" — 텍스트를 입력받아<br>다음 토큰을 확률로 예측</div>
           </div>
           <div class="mt-plus">실행 환경에 심으면 ↓</div>
           <div class="mt-card tool">
             <div class="mt-tag hot">TOOL · 에이전트 툴</div>
             <div class="mt-ico">🛠️</div>
-            <div class="mt-name">Claude Code · Codex · Cursor</div>
+            <div class="mt-name"><span class="brand"><img class="blogo" src="/avatars/claude.svg" alt="">Claude Code</span> · <span class="brand"><img class="blogo" src="/avatars/openai.svg" alt="">Codex</span></div>
             <div class="mt-desc">"두뇌 + 손발" — 터미널·파일·브라우저를<br>직접 조작하고 결과를 보고 다시 판단</div>
           </div>
         </div>
@@ -221,9 +334,9 @@ window.SLIDES = [
             <div class="fan">
               <div class="fan-src">동일 input</div>
               <div class="fan-arms">
-                <div class="arm a"><span class="arm-line"></span><div class="arm-end">Claude → <b>A 방식</b><i>날짜별 폴더로</i></div></div>
-                <div class="arm b"><span class="arm-line"></span><div class="arm-end">GPT → <b>B 방식</b><i>확장자별로</i></div></div>
-                <div class="arm c"><span class="arm-line"></span><div class="arm-end">Gemini → <b>C 방식</b><i>먼저 되묻기</i></div></div>
+                <div class="arm a"><span class="arm-line"></span><div class="arm-end"><span class="brand"><img class="blogo" src="/avatars/claude.svg" alt="">Claude</span> → <b>A 방식</b><i>날짜별 폴더로</i></div></div>
+                <div class="arm b"><span class="arm-line"></span><div class="arm-end"><span class="brand"><img class="blogo" src="/avatars/openai.svg" alt="">GPT</span> → <b>B 방식</b><i>확장자별로</i></div></div>
+                <div class="arm c"><span class="arm-line"></span><div class="arm-end"><span class="brand"><img class="blogo" src="/avatars/gemini.svg" alt="">Gemini</span> → <b>C 방식</b><i>먼저 되묻기</i></div></div>
               </div>
             </div>
             <div class="dist-cap">우열이 아니라 <b>서로 다른 방향</b> — 모델마다 학습된 확률분포가 달라 같은 input에도 output·action이 갈린다</div>
@@ -280,7 +393,7 @@ window.SLIDES = [
         <div class="tool-grid">
           <div class="tool-card pop"><div class="tc-logo a"><img src="/avatars/claude.svg" alt=""></div><div class="tc-n">Claude Code</div><div class="tc-d">Anthropic · 터미널 에이전트</div></div>
           <div class="tool-card pop" style="--d:.08s"><div class="tc-logo b"><img src="/avatars/openai.svg" alt=""></div><div class="tc-n">Codex</div><div class="tc-d">OpenAI · 코딩 에이전트</div></div>
-          <div class="tool-card pop" style="--d:.16s"><div class="tc-logo c"><img src="/avatars/gemini.svg" alt=""></div><div class="tc-n">Antigravity</div><div class="tc-d">Google · 에이전틱 IDE</div></div>
+          <div class="tool-card pop" style="--d:.16s"><div class="tc-logo c"><img src="/avatars/antigravity.svg" alt=""></div><div class="tc-n">Antigravity</div><div class="tc-d">Google · 에이전틱 IDE</div></div>
           <div class="tool-card pop" style="--d:.24s"><div class="tc-logo d"><img src="/avatars/gemini.svg" alt=""></div><div class="tc-n">Stitch</div><div class="tc-d">Google · UI 생성</div></div>
           <div class="tool-card pop hot" style="--d:.32s"><div class="tc-logo e"><img src="/avatars/salesforce.svg" alt=""></div><div class="tc-n">사내 Slackbot</div><div class="tc-d">Salesforce · 워크스페이스 에이전트</div></div>
         </div>
@@ -342,11 +455,80 @@ window.SLIDES = [
           <div class="f3-ar">→</div>
           <div class="f3"><div class="f3-ico">👀</div><div class="f3-t">사람이 판단</div><div class="f3-s">맞는지 검증·방향</div></div>
         </div>
-        <div class="quote-card">"문법을 외워 타이핑"하던 코딩에서 → <b>"의도를 설계하고 결과를 판단"</b>하는 코딩으로</div>
+        <div class="quote-card">사람과 컴퓨터의 <b>논리를 통역</b>하던 게 개발자였다면 — 이제 <b>자연어 → 코드</b> 변환은 LLM이 대체. "개발"은 <b>"코딩 시간"</b> 외엔 크게 바뀐 게 없다</div>
       </div>`
   },
 
-  /* 가능 / 한계 */
+  /* 추상화 계층 · 프로그래밍 언어도 결국 번역기다 → 바이브코딩은 한 겹 더 */
+  {
+    html: `
+      <h2><span class="dot"></span> 사실 — 프로그래밍 언어도 결국 "번역기"다 🔤</h2>
+      <div class="sbody">
+        <div class="abz">
+          <div class="abz-row"><span class="abz-ico">🔌</span><span class="abz-t">0 / 1 · NAND·NOR 논리연산</span><span class="abz-d">CPU가 실제로 하는 일<br>(어느 핀에 전압을 걸까)</span></div>
+          <div class="abz-conv">▲ 어셈블러 <b>assembler</b></div>
+          <div class="abz-row"><span class="abz-ico">⚙️</span><span class="abz-t">Assembly · ADD·MUL·JUMP</span><span class="abz-d">RISC/CISC의 1차 wrapper<br>predefine된 논리연산</span></div>
+          <div class="abz-conv">▲ 컴파일러 <b>compiler</b></div>
+          <div class="abz-row"><span class="abz-ico">📜</span><span class="abz-t">프로그래밍 언어 · JS·Python·C++</span><span class="abz-d">유사 자연어로<br>다시 한 번 감싼 것</span></div>
+          <div class="abz-conv">▲ <b>LLM</b> (바이브코딩)</div>
+          <div class="abz-row top"><span class="abz-ico">💬</span><span class="abz-t">자연어 · "매출 대시보드 만들어줘"</span><span class="abz-d">사람의 말 그대로</span></div>
+        </div>
+        <div class="punch-line hot">바이브코딩 = PL 위에 <b>자연어 계층을 한 겹 더</b> 얹은 것 — LLM은 사실상 <b>또 하나의 컴파일러</b>일 뿐</div>
+      </div>`
+  },
+
+  /* [다리 1/3] 왜 코딩에서 특히 강력했나 — 답이 정해져 있고 재사용이 근본 */
+  {
+    html: `
+      <h2><span class="dot"></span> 코딩이 <u>가장 먼저·강력하게</u> 뚫린 이유 ⌨️</h2>
+      <div class="sbody">
+        <div class="punch-line">세상에서 <b>가장 생산성 높은 언어적 행위</b>가 바로 코딩이었다</div>
+        <div class="three-up">
+          <div class="tu-card pop"><div class="tu-ico">✅</div><div class="tu-t">답이 정해져 있다</div><div class="tu-s">알려진 알고리즘·<br>남의 코드를 그대로</div></div>
+          <div class="tu-card pop" style="--d:.15s"><div class="tu-ico">♻️</div><div class="tu-t">재사용이 근본</div><div class="tu-s">라이브러리 · npm · pip<br>재사용 생태계가 메인</div></div>
+          <div class="tu-card pop hot" style="--d:.3s"><div class="tu-ico">🎯</div><div class="tu-t">패턴화된 언어</div><div class="tu-s">확률 기계에<br>완벽히 들어맞음</div></div>
+        </div>
+        <div class="punch-line hot"><b>패턴 + 재사용</b>이 핵심인 코딩은 — 확률 기계에 <b>완벽하게 들어맞는 먹잇감</b>이었다</div>
+      </div>`
+  },
+
+  /* [다리 2/3] 그러나 개발자는 대체되지 않았다 · 통역사 vs 직역 (domain 이슈) */
+  {
+    html: `
+      <h2><span class="dot"></span> 그런데 — 개발자는 왜 대체되지 않았나 🧭</h2>
+      <div class="sbody">
+        <div class="xlate-flow">
+          <div class="xf-node">🌐 언어 A</div>
+          <div class="xf-mid"><div class="xf-bad">🤖 직역기<br><span>단어만 옮김</span></div><div class="xf-good">🧑 통역사<br><span>domain을 안다</span></div></div>
+          <div class="xf-node">🌐 언어 B</div>
+        </div>
+        <div class="ask-compare">
+          <div class="ac-col bad"><div class="ac-tag">직역 · rule-base 번역기</div><div class="ac-note">파파고·구글 번역 (LLM 이전)<br><br>단어를 그대로 옮김<br>→ <b>어색하고 안 통함</b></div></div>
+          <div class="ac-col good"><div class="ac-tag">통역사 (= 개발자)</div><div class="ac-note">그래도 <b>사람 통역사</b>는 필요했다<br><br>문장 배열·표현·문화 배경<br>= <b>언어의 domain</b>을 안다</div></div>
+        </div>
+        <div class="punch-line hot">SW 엔지니어링은 <b>답을 찾는 일이 아니라</b> — 피드백을 보며 <b>그때그때 최선을 고르는</b> 일 (LLM은 코드를 <b>생성</b>해도 <b>computing logic</b>을 완벽히 변환하진 못한다)</div>
+      </div>`
+  },
+
+  /* [다리 3/3] 코딩 ≠ 소프트웨어 엔지니어링 → SaaS 강점으로 연결 */
+  {
+    html: `
+      <h2><span class="dot"></span> 그래서 — "코딩" ≠ "소프트웨어 엔지니어링" ⚠️</h2>
+      <div class="sbody">
+        <div class="collide">
+          <div class="basis b1 pop"><div class="b-ico">⌨️</div><div class="b-name">코딩</div><div class="b-sub">정해진 답을 짜기</div></div>
+          <div class="crash"><span>≠</span></div>
+          <div class="basis b2 pop" style="--d:.2s"><div class="b-ico">🏗️</div><div class="b-name">소프트웨어 엔지니어링</div><div class="b-sub">무엇을·왜·어떻게를 설계·운영</div></div>
+        </div>
+        <div class="ask-compare">
+          <div class="ac-col good"><div class="ac-tag">코딩 · Coding</div><div class="ac-note"><b>정해진 답을 짜는 일</b><br><br>· 알려진 알고리즘 구현<br>· 라이브러리 조합<br>· 패턴화 → <b>AI가 잘함</b></div></div>
+          <div class="ac-col bad"><div class="ac-tag">소프트웨어 엔지니어링</div><div class="ac-note"><b>무엇을·왜·어떻게를 설계·운영</b><br><br>· 요구사항 정의·트레이드오프<br>· 아키텍처·안정성·확장<br>· 도메인 판단 → <b>사람의 몫</b></div></div>
+        </div>
+        <div class="punch-line hot">바로 이것이 — <b>구현이 쉬워져도 SaaS가 쉽게 대체되지 않는 이유</b>다</div>
+      </div>`
+  },
+
+  /* 가능 / 한계 — 바이브코딩의 현실 체크 (SaaS 파트로 넘어가기 전 마무리) */
   {
     html: `
       <h2><span class="dot"></span> 무엇이 가능하고, 무엇이 함정인가</h2>
@@ -370,7 +552,7 @@ window.SLIDES = [
     html: `
       <h2><span class="dot"></span> 사실, "구현"은 원래도 어렵지 않았다</h2>
       <div class="sbody">
-        <div class="logos-row"><span>Google</span><span>AWS</span><span>삼성SDS</span><span>LG CNS</span></div>
+        <div class="logos-row"><span><img class="blogo" src="/avatars/gemini.svg" alt="">Google</span><span><img class="blogo" src="/avatars/aws.svg" alt="">AWS</span><span><img class="blogo" src="/avatars/samsungsds.svg" alt="">삼성SDS</span><span><img class="blogo" src="/avatars/lgcns.svg" alt="">LG CNS</span></div>
         <div class="mid-statement">우수한 개발자를 가진 곳은 <b>구현 자체로 고생하지 않았다</b></div>
         <div class="punch-line">AI가 구현 비용을 낮춘 건 맞지만 — 그게 SW의 <b>핵심 난제</b>는 아니었다</div>
       </div>`
@@ -408,15 +590,27 @@ window.SLIDES = [
     html: `
       <h2><span class="dot"></span> 직접 만들 수 있다고, 직접 만드시겠어요?</h2>
       <div class="sbody">
-        <div class="car-q">
-          <div class="car-opt diy"><div class="car-ico">🔧🤖</div><div class="car-t">AI·로봇으로<br>내 차 직접 제작</div></div>
-          <div class="car-vs">VS</div>
-          <div class="car-opt brand"><div class="car-ico">🚗</div><div class="car-t">현대·도요타·테슬라의<br>차를 구매</div></div>
+        <div class="bvb">
+          <div class="bvb-side build"><div class="bvb-h">🔧 직접 제작</div>
+            <div class="bvb-stage">
+              <i class="bvb-part p1">🔩</i><i class="bvb-part p2">⚙️</i><i class="bvb-part p3">🛞</i>
+              <span class="bvb-result">🚗</span>
+              <span class="bvb-toil">부품·조립·검증·책임…</span>
+            </div>
+            <div class="bvb-sub">AI·로봇으로 내 차를 만들 수 <b>있다</b></div>
+          </div>
+          <div class="bvb-vs">VS</div>
+          <div class="bvb-side buy"><div class="bvb-h">🏭 사서 쓰기</div>
+            <div class="bvb-stage">
+              <span class="bvb-vendor">🏭</span><span class="bvb-product">🚗</span><span class="bvb-buyer">🧑</span>
+              <span class="bvb-check">✅</span>
+            </div>
+            <div class="bvb-sub">현대·도요타·테슬라의 차를 <b>산다</b></div>
+          </div>
         </div>
         <div class="car-cases">
           <span>🚲 인증된 자전거를 산다</span>
-          <span>🚙 더 좋은 브랜드 차를 산다</span>
-          <span>🧊 중국 저가 가전 두고 LG·삼성을 산다</span>
+          <span>🧊 중국 저가 두고 LG·삼성을 산다</span>
         </div>
         <div class="punch-line">그 가전들도 상당수 <b>OEM 중국 생산</b> — 그래도 산다. "만드는 것"은 중요하지만 <b>핵심이 아니다</b></div>
       </div>`
@@ -427,10 +621,23 @@ window.SLIDES = [
     html: `
       <h2><span class="dot"></span> 더 와닿는 예 — 조립 PC vs Dell 서버</h2>
       <div class="sbody">
-        <div class="car-q">
-          <div class="car-opt diy"><div class="car-ico">🔩</div><div class="car-t">부품 사서<br>직접 조립</div></div>
-          <div class="car-vs">VS</div>
-          <div class="car-opt brand"><div class="car-ico">🖥️</div><div class="car-t">Dell·HP 완제품<br>서버 구매</div></div>
+        <div class="bvb">
+          <div class="bvb-side build"><div class="bvb-h">🔩 직접 조립</div>
+            <div class="bvb-stage">
+              <i class="bvb-part p1">🧠</i><i class="bvb-part p2">🎛️</i><i class="bvb-part p3">💾</i>
+              <span class="bvb-result">🖥️</span>
+              <span class="bvb-toil">호환성·안정성·검증…</span>
+            </div>
+            <div class="bvb-sub">부품 사서 조립 — 더 싸고 스펙도 좋을 수 있다</div>
+          </div>
+          <div class="bvb-vs">VS</div>
+          <div class="bvb-side buy"><div class="bvb-h">🏢 완제품 구매</div>
+            <div class="bvb-stage">
+              <span class="bvb-vendor">🏢</span><span class="bvb-product">🖥️</span><span class="bvb-buyer">🧑‍💼</span>
+              <span class="bvb-check">✅</span>
+            </div>
+            <div class="bvb-sub">Dell·HP 완제품 서버를 산다</div>
+          </div>
         </div>
         <div class="debrief-list">
           <div class="dl">조립이 <b>더 싸고 스펙도 더 좋을 수</b> 있다 — 그런데도 기업은 완제품을 산다</div>
@@ -446,10 +653,23 @@ window.SLIDES = [
     html: `
       <h2><span class="dot"></span> 그런데 — "가격"이 오르면 얘기가 달라진다 🍳</h2>
       <div class="sbody">
-        <div class="car-q">
-          <div class="car-opt diy"><div class="car-ico">🍳</div><div class="car-t">직접 요리<br>(재료 사서)</div></div>
-          <div class="car-vs">VS</div>
-          <div class="car-opt brand"><div class="car-ico">🍽️</div><div class="car-t">사 먹기<br>(외식·배달)</div></div>
+        <div class="bvb">
+          <div class="bvb-side build"><div class="bvb-h">🍳 직접 요리</div>
+            <div class="bvb-stage">
+              <i class="bvb-part p1">🥬</i><i class="bvb-part p2">🥩</i><i class="bvb-part p3">🧅</i>
+              <span class="bvb-result">🍲</span>
+              <span class="bvb-toil">장보기·요리·설거지…</span>
+            </div>
+            <div class="bvb-sub">재료 사서 — 더 싸고 맛있을 수 있다</div>
+          </div>
+          <div class="bvb-vs">VS</div>
+          <div class="bvb-side buy"><div class="bvb-h">🍽️ 사 먹기</div>
+            <div class="bvb-stage">
+              <span class="bvb-vendor">🍽️</span><span class="bvb-product">🍱</span><span class="bvb-buyer">🧑</span>
+              <span class="bvb-check">✅</span>
+            </div>
+            <div class="bvb-sub">외식·배달로 사 먹는다</div>
+          </div>
         </div>
         <div class="debrief-list">
           <div class="dl">직접 하면 <b>더 싸고 맛있을 수</b> 있지만 — 장보기·요리·설거지·남는 재료까지 치면 <b>사 먹는 게 경제적</b>일 때가 많다</div>
@@ -554,14 +774,14 @@ window.SLIDES = [
           <div class="tu-card pop" style="--d:.15s"><div class="tu-ico">🛡️</div><div class="tu-t">모니터링·회귀</div><div class="tu-s">품질 유지</div></div>
           <div class="tu-card pop" style="--d:.3s"><div class="tu-ico">🔄</div><div class="tu-t">기능 도입·진화</div><div class="tu-s">고객 요구 반영</div></div>
         </div>
-        <div class="crm-pill glow">구현이 아니라 <b>운영·신뢰·표준화</b> — 그게 SaaS의 해자(垓字)</div>
+        <div class="crm-pill glow"><b>해자 ①</b> · 구현이 아니라 <b>운영·신뢰·표준화</b> — 그게 SaaS의 해자(垓字)</div>
       </div>`
   },
 
   /* 두 번째 이유 ②-A · 모델과 툴은 한 세트 */
   {
     html: `
-      <h2><span class="dot"></span> 두 번째 이유 ① · 모델과 툴은 "한 세트"다</h2>
+      <h2><span class="dot"></span> 해자 ② · 모델과 툴은 "한 세트"다</h2>
       <div class="sbody">
         <div class="set-eq">
           <div class="set-card"><div class="set-ico">🧠</div><div class="set-t">모델의 generation 방식</div></div>
@@ -582,7 +802,7 @@ window.SLIDES = [
   /* 두 번째 이유 ②-B · 진짜 해자 = 경험과 노하우 */
   {
     html: `
-      <h2><span class="dot"></span> 두 번째 이유 ② · 정확히는 "경험과 노하우"가 해자다</h2>
+      <h2><span class="dot"></span> 해자 ③ · 정확히는 "경험과 노하우"가 해자다</h2>
       <div class="sbody">
         <div class="market-split">
           <div class="mkt-card"><div class="mkt-h">모델을 잘 <u>만드는</u> 싸움</div><div class="mkt-logos"><img src="/avatars/openai.svg" alt="OpenAI"><img src="/avatars/gemini.svg" alt="Google"><img src="/avatars/claude.svg" alt="Anthropic"></div></div>
@@ -600,13 +820,13 @@ window.SLIDES = [
   /* 두 번째 이유 ②-C · 모델과 툴은 한 세트 — Salesforce × Anthropic */
   {
     html: `
-      <h2><span class="dot"></span> 그리고 — "모델과 툴은 한 세트다" 🤝</h2>
+      <h2><span class="dot"></span> Salesforce × Anthropic — 그래서 손잡았다 🤝</h2>
       <div class="sbody">
         <div class="punch-line"><img class="blogo" src="/avatars/salesforce.svg" alt="">Salesforce <b>×</b> <img class="blogo" src="/avatars/claude.svg" alt="">Anthropic 전략적 파트너십 <span class="mut">(Dreamforce 2025.10, 계속 확장 중)</span></div>
-        <div class="debrief-list">
-          <div class="dl"><img class="blogo" src="/avatars/claude.svg" alt=""><b>Claude가 Agentforce 360의 preferred 모델</b> — Salesforce 신뢰 경계(VPC) 안에서 동작, 금융·헬스케어·보안·생명과학 등 규제 산업 대응</div>
-          <div class="dl"><img class="blogo" src="/avatars/claude.svg" alt=""><b>Claude ↔ Slack 양방향</b> — Slack MCP로 Claude가 채널·CRM·Tableau 맥락을 읽고, Slack 안에서 Claude 호출 (<b>Claude Tag</b>)</div>
-          <div class="dl"><img class="blogo" src="/avatars/salesforce.svg" alt=""><b>Salesforce는 Claude Code를 전사 엔지니어링에 도입</b>, Anthropic은 내부 세일즈에 Slack+Claude 사용 — 서로의 제품을 쓴다</div>
+        <div class="three-up part-cards">
+          <div class="tu-card pop"><div class="tu-logo"><img src="/avatars/claude.svg" alt=""></div><div class="tu-t">Agentforce의 preferred 모델</div><div class="tu-s">Claude가 신뢰 경계(VPC) 안에서 동작 — 금융·헬스케어·보안·생명과학 규제 산업 대응</div></div>
+          <div class="tu-card pop" style="--d:.15s"><div class="tu-logo"><img src="/avatars/salesforce.svg" alt=""></div><div class="tu-t">Claude ↔ Slack 양방향</div><div class="tu-s">Slack MCP로 채널·CRM·Tableau 맥락을 읽고, Slack 안에서 Claude 호출 (<b>Claude Tag</b>)</div></div>
+          <div class="tu-card pop" style="--d:.3s"><div class="tu-logo"><img src="/avatars/salesforce.svg" alt=""></div><div class="tu-t">서로의 제품을 쓴다</div><div class="tu-s">Salesforce는 <b>Claude Code</b>를 전사 엔지니어링에 도입 · Anthropic은 내부 세일즈에 Slack+Claude</div></div>
         </div>
         <div class="punch-line hot">Claude 생태계가 커질수록 Salesforce 접근성이 쉬워지고 <b>종합 생산성이 함께 증대</b>되는 선순환</div>
       </div>`
@@ -664,6 +884,23 @@ window.SLIDES = [
       </div>`
   },
 
+  /* 이론 Q&A · 핸즈온 넘어가기 전 질문 받기 (실시간 질문 버블이 이 위에 뜬다) */
+  {
+    cls: 'slide-qa',
+    html: `
+      <div class="qa-wrap">
+        <div class="qa-emoji">🙋</div>
+        <h1 class="grad-title">여기까지, 질문 있으신가요?</h1>
+        <p class="qa-sub">핸즈온 실습으로 넘어가기 전 — <b>이론 파트</b>에 대해 궁금한 걸 편하게 남겨주세요</p>
+        <div class="qa-steps">
+          <div class="qa-step"><span class="qa-n">1</span> 하단 입력창에 질문을 적고 <b>질문 ✦</b></div>
+          <div class="qa-step"><span class="qa-n">2</span> 화면에 <b>포스트잇</b>처럼 떠오릅니다</div>
+          <div class="qa-step"><span class="qa-n">3</span> 공감되는 질문엔 <b>👍</b>로 투표해요</div>
+        </div>
+        <div class="qa-hint">💬 지금까지: 확률 기계 · 발전사 · 바이브코딩 · 그래도 SaaS가 강한 이유</div>
+      </div>`
+  },
+
   /* ═══════════════════════════════ HANDS-ON A divider (매출의 정의 — stage 함정) */
   {
     cls: 'slide-section hands-divider',
@@ -710,9 +947,11 @@ GET  /api/schema                  필드 설명</code></div>
       <h2><span class="step-tag">STEP 1</span> 이 프롬프트로 대시보드를 만들어 보세요</h2>
       <div class="sbody">
         <div class="prompt-box big"><div class="pb-head"><span class="pb-dot"></span> Claude Code 프롬프트 — 복사해서 붙여넣기</div><code>{BASE_URL}/api/opportunities 를 fetch 해서
-AE(영업담당)별 매출 합계를 막대그래프로 보여주는
+AE별 매출 합계를 막대그래프로 보여주는
 대시보드를 만들어줘. 단일 HTML(dashboard.html).
-누가 매출 1등인지 한눈에 보이게.</code></div>
+- 필드: owner_ae(영업담당), arr(매출·만원), stage(영업단계)
+- owner_ae별 arr 합계를 막대그래프로
+- 누가 매출 1등인지 한눈에 보이게</code></div>
         <div class="expect"><b>"구현되었나요?"</b> · 네 — 에러 0, 화면 깔끔, 막대그래프 완성 ✅</div>
         <div class="assume">⌨️ 완성되면 — <b>누가 1등</b>으로 나오나요?</div>
       </div>`
@@ -844,6 +1083,7 @@ GET  /api/sales/schema        필드 설명</code></div>
         <div class="prompt-box big"><div class="pb-head"><span class="pb-dot"></span> Claude Code 프롬프트 — 복사해서 붙여넣기</div><code>Salesforce Tableau 스타일의 매출 대시보드를 만들어줘.
 단일 HTML(dashboard.html). 데이터: {BASE_URL}/api/sales
 (스키마: {BASE_URL}/api/sales/schema)
+- 필드: amount(거래금액), region·channel·category·segment
 - region·channel·category·segment 필터
 - 전체 매출(amount) 합계·거래 건수 KPI를 보여줘.</code></div>
         <div class="expect"><b>"구현되었나요?"</b> · 네 — 에러 0, KPI 카드·차트·필터 전부 완성 ✅</div>
@@ -859,7 +1099,7 @@ GET  /api/sales/schema        필드 설명</code></div>
         <div class="ba-row single">
           <div class="ba-card bad">
             <div class="ba-tag">AI가 만든 대시보드 (에러 0)</div>
-            <div class="ba-clock">43<span>억</span></div>
+            <div class="ba-clock"><span class="cu" data-countup="43" data-dur="1000">0</span><span>억</span></div>
             <div class="ba-sub">총 매출 · 거래 100건 · KPI/차트 완벽 동작</div>
           </div>
         </div>
@@ -875,14 +1115,14 @@ GET  /api/sales/schema        필드 설명</code></div>
         <div class="ba-row">
           <div class="ba-card bad">
             <div class="ba-tag">AI 대시보드</div>
-            <div class="ba-clock">43<span>억</span></div>
+            <div class="ba-clock"><span class="cu" data-countup="43" data-dur="700">0</span><span>억</span></div>
             <div class="ba-sub">거래 100건 집계</div>
             <div class="ba-bar"><i style="--w:1%"></i></div>
           </div>
           <div class="ba-ar">→</div>
           <div class="ba-card good">
             <div class="ba-tag">실제 전체 데이터</div>
-            <div class="ba-clock">7,425<span>억</span></div>
+            <div class="ba-clock"><span class="cu" data-countup="7425" data-dur="1600" data-delay="700">0</span><span>억</span></div>
             <div class="ba-sub">거래 15,000건 집계</div>
             <div class="ba-bar"><i style="--w:100%"></i></div>
           </div>
@@ -974,7 +1214,7 @@ GET  /api/sales/schema        필드 설명</code></div>
   /* ═══════════════════════════════ HANDS-ON C divider (API 미로 — 에이전트 만들기) */
   {
     cls: 'slide-section hands-divider',
-    html: `<div class="sec-wrap"><div class="sec-num lab">🤖</div><div class="sec-meta"><div class="sec-eyebrow hot">HANDS-ON C · 에이전트 만들기</div><h1>API 미로를 푸는 에이전트</h1><p>두뇌는 Haiku 고정 — 똑똑한 모델이 아니라 "잘 설계한 에이전트"가 미로를 푼다</p></div></div>`
+    html: `<div class="sec-wrap"><div class="sec-num lab">🤖</div><div class="sec-meta"><div class="sec-eyebrow hot">HANDS-ON C · 에이전트 만들기</div><h1>API 미로를 푸는 에이전트</h1><p>두뇌가 Opus여도 순진하게 짜면 못 뚫는다 — "잘 설계한 에이전트"가 미로를 푼다</p></div></div>`
   },
 
   /* C · 과제 개요 */
@@ -985,7 +1225,7 @@ GET  /api/sales/schema        필드 설명</code></div>
         <div class="maze-intro">
           <div class="mi-line"><span class="mi-ico">🤖</span><div>Claude Code로 <b>"미로를 스스로 푸는 에이전트"를 만듭니다.</b> 에이전트가 뭔지 — 직접 만들어보며 체험하는 과정입니다.</div></div>
           <div class="mi-line"><span class="mi-ico">🚪</span><div>API 미로가 열립니다. 에이전트가 <b>API를 자율 탐색</b>하며 관문을 순서대로 통과하면 <b>최종 FLAG</b>를 얻습니다.</div></div>
-          <div class="mi-line"><span class="mi-ico">🧠</span><div>에이전트의 두뇌는 <b>Haiku로 고정</b>입니다. 똑똑한 모델이 대신 풀어주는 게 아니라 — <b>여러분이 설계한 에이전트의 실력</b>이 드러납니다.</div></div>
+          <div class="mi-line"><span class="mi-ico">🧠</span><div>두뇌는 <b>Opus로 고정</b>입니다 — 하지만 똑똑한 모델이 대신 풀어주지 않습니다. <b>인젝션·글리치 함정</b>은 지능이 아니라 <b>여러분이 설계한 에이전트의 실력</b>으로 뚫어야 합니다.</div></div>
         </div>
         <div class="hint">💡 구현은 Claude Code가 돕지만, <b>"어떻게 푸는 에이전트를 만들지"</b> 설계는 여러분 몫입니다</div>
       </div>`
@@ -1003,8 +1243,8 @@ GET  /api/sales/schema        필드 설명</code></div>
 2. 자신의 Claude Code Bedrock 설정을 참고하여 LLM을 사용할 것
 3. Claude Code의 직접 개입 없이, 순수하게 구현된 에이전트가 스스로 미로를 풀도록 구현할 것
 4. 모든 문제는 API로 주어집니다. API를 자율 탐색·사용하도록 에이전트에 bash tool을 제공할 것
-5. 에이전트가 쓰는 LLM 모델은 "claude-haiku-4-5-20251001" 로 고정할 것
-6. 게이트웨이 호출법: ~/.claude/settings.json 의 env에서 ANTHROPIC_BEDROCK_BASE_URL·ANTHROPIC_AUTH_TOKEN·NODE_EXTRA_CA_CERTS 를 읽어, OpenAI 호환 형식(POST {ROOT}/v1/chat/completions, 헤더 Authorization: Bearer <토큰>, body {"model":"claude-haiku-4-5-20251001",...})으로 호출. (@anthropic-ai/sdk 기본 /v1/messages 는 안 됨)
+5. 에이전트가 쓰는 LLM 모델은 "claude-opus-4-7" 로 고정할 것
+6. 게이트웨이 호출법: ~/.claude/settings.json 의 env에서 ANTHROPIC_BEDROCK_BASE_URL·ANTHROPIC_AUTH_TOKEN·NODE_EXTRA_CA_CERTS 를 읽어, OpenAI 호환 형식(POST {ROOT}/v1/chat/completions, 헤더 Authorization: Bearer <토큰>, body {"model":"claude-opus-4-7",...})으로 호출. (@anthropic-ai/sdk 기본 /v1/messages 는 안 됨)
 7. 출발 API: POST {BASE_URL}/maze/start  (body: {"name":"(닉네임)"}) — 응답에 이후 API 목록·규칙이 들어있음
 8. 구현 후 실행 가능한 상태로 만들고, 실행 및 미로 풀이 trigger는 사람에게 시킬 것</code></div>
         <div class="assume">⌨️ <code>(닉네임)</code> 은 자동으로 여러분 닉네임으로 채워집니다 · <code>{BASE_URL}</code> 도 실제 주소로 치환됩니다</div>
@@ -1015,7 +1255,7 @@ GET  /api/sales/schema        필드 설명</code></div>
   {
     cls: 'maze-board-slide',
     html: `
-      <h2><span class="dot"></span> 🏁 실시간 리더보드 <span class="lb-live">LIVE</span></h2>
+      <h2><span class="dot"></span> 🏁 실시간 리더보드 <span class="lb-live">LIVE</span> <button id="lb-reset" class="lb-reset hidden">🗑️ 초기화</button></h2>
       <div class="sbody">
         <div id="maze-board" class="maze-board"><div class="mb-empty">아직 참가자가 없습니다 — 미로를 시작하면 여기에 실시간으로 나타납니다!</div></div>
       </div>`
@@ -1026,12 +1266,37 @@ GET  /api/sales/schema        필드 설명</code></div>
     html: `
       <h2><span class="dot"></span> 방금 만든 것이 바로 "에이전트"입니다</h2>
       <div class="sbody">
+        <div class="agent-loop">
+          <div class="al-node">👀<span>관찰</span><i>API 응답을 읽고</i></div>
+          <div class="al-ar">→</div>
+          <div class="al-node">🧠<span>기억·판단</span><i>맥락을 쌓아</i></div>
+          <div class="al-ar">→</div>
+          <div class="al-node hot">🤖<span>다음 행동</span><i>도구를 호출</i></div>
+          <div class="al-loop">↻ 반복</div>
+        </div>
         <div class="debrief-list">
           <div class="dl">한 번 묻고 끝이 아니라 — <b>관찰하고, 기억하고, 다음 행동을 정하는</b> 루프를 만들었습니다</div>
-          <div class="dl">미로는 규칙을 다 알려주지 않았습니다 — <b>탐험하며 알아내는 것</b>이 에이전트의 일</div>
           <div class="dl hot">구현은 Claude가 했지만, <b>"어떻게 풀지" 설계</b>는 여러분이 했습니다 — 그게 실력입니다</div>
         </div>
         <div class="punch-line">바이브 코딩으로 구현이 쉬워질수록 — <b>무엇을·어떻게 만들지 아는 사람</b>이 더 강해집니다</div>
+      </div>`
+  },
+
+  /* 다음 세션 안내 — 찬연님 Slack 핸즈온 */
+  {
+    cls: 'slide-qa',
+    note: `<b>세션 핸드오프.</b><ul><li>여기까지가 제 파트(바이브코딩 이해 + 핸즈온 A/B/C) — 다음은 <b>찬연님의 Slack 핸즈온</b>입니다</li><li>아래 버튼/링크로 실습 문서에 접속하도록 안내</li><li>자연스럽게 마이크 넘기기.</li></ul>`,
+    html: `
+      <div class="qa-wrap">
+        <div class="qa-emoji"><img src="/avatars/salesforce.svg" alt="Slack" style="width:72px;height:72px;object-fit:contain"></div>
+        <h1 class="grad-title">다음은 — Slack 핸즈온 💬</h1>
+        <p class="qa-sub"><b>찬연님</b>과 함께 — Slack을 활용하는 실습을 이어서 진행합니다</p>
+        <div class="qa-steps">
+          <div class="qa-step"><span class="qa-n">1</span> 아래 <b>실습 문서</b>를 여세요</div>
+          <div class="qa-step"><span class="qa-n">2</span> 안내에 따라 <b>Slack에서 실습</b>을 진행합니다</div>
+        </div>
+        <a class="feedback-cta" href="https://salesforce.enterprise.slack.com/docs/T01G0063H29/F0BEG88S5NG" target="_blank" rel="noopener">📄 Slack 실습 문서 열기</a>
+        <div class="qa-hint">💬 링크가 안 열리면 Slack 앱에서 직접 문서를 검색해 주세요</div>
       </div>`
   },
 
@@ -1044,7 +1309,10 @@ GET  /api/sales/schema        필드 설명</code></div>
         <h1 class="grad-title">감사합니다</h1>
         <p class="sub">AI는 <b>구현</b>을 — 사람은 <b>판단</b>을 — Salesforce는 <b>시스템</b>을</p>
         <div class="title-chips"><span>🧠 확률기계</span><span>🛠️ 모델 + 툴</span><span>🏢 운영의 해자</span></div>
-        <button class="feedback-cta" id="feedback-open">📝 피드백 남기기</button>
+        <p class="fb-ask">🙏 <b>많은 피드백 부탁드립니다!</b></p>
+        <a class="feedback-cta" href="https://forms.gle/e9mmUk8v44T6vRXc9" target="_blank" rel="noopener">📝 피드백 남기기</a>
       </div>`
   },
 ];
+
+window.SLIDE_NOTES = {"0":"<b>오프닝.</b><ul><li>한 줄로 오늘의 약속: <b>AI의 원리부터 바이브코딩, 그리고 핸즈온</b>까지 1.5시간</li><li>제목의 핵심 메시지 — \"AI를 <b>이해</b>하고 쓰자\", 막연한 기대·공포 둘 다 걷어낸다</li><li>다음은 강사 소개.</li></ul>","1":"<ul><li><b>신뢰 쌓기.</b> 반도체 6년, 그중 <b>4년이 AI·LLM·Agentic</b> — 현장에서 직접 만든 사람</li><li>대표작 <b>Local CLI</b> 데모 영상 짧게 재생 — \"이런 걸 만든다\"를 눈으로</li><li>블로그는 사내망 차단, 폰으로 보라고 안내</li><li>다음은 PART 1 — AI란 무엇인가.</li></ul>","3":"<ul><li><b>파트 전환.</b> 첫 파트의 한 문장: AI는 똑똑한 도구가 아니라 <b>확률 예측기</b>다</li><li>\"이 프레임을 잡으면 나머지가 다 풀린다\"고 예고</li><li>다음은 알파고 예시부터.</li></ul>","4":"<ul><li><b>친숙한 진입점.</b> 알파고는 \"이긴다\"를 아는 게 아니라 <b>각 자리의 승률(확률)</b>을 계산해 고를 뿐</li><li>92%·64%·31% 짚으며 — 결정이 아니라 <b>확률 분포</b>라는 점 강조</li><li>다음은 LLM도 똑같은 원리라는 것.</li></ul>","5":"<ul><li><b>핵심 연결.</b> LLM은 \"다음 <b>단어</b>\"를 확률로 고른다 — 알파고의 \"다음 수\"와 <b>완전히 같은 문법</b></li><li>김밥 90%·라면 60% 막대를 짚으며 \"이게 전부다\"</li><li>다음 슬라이드에서 이 성질의 결론을 낸다.</li></ul>","6":"<ul><li><b>확률기계의 3가지 성질.</b> ①매번 다를 수 있다 ②틀릴 수 있다 ③언제 틀릴진 모른다</li><li>펀치라인: 똑똑해 보이는 건 <b>이해해서가 아니라 확률 분포가 정교</b>해서다</li><li>\"그래서 검증은 사람 몫\" — 뒤 핸즈온의 복선</li><li>다음은 반전 — 그래서 <b>오히려 강력하다</b>.</li></ul>","7":"<b>핵심 반전 슬라이드.</b> 앞에서 \"확률이라 틀린다\"고 했는데 여기서 뒤집는다.<ul><li>카파시 비유: LLM = 인류 지식을 <b>압축한 거대한 도서관</b></li><li>질문을 던지면 가장 알맞은 답(확률 높은 답)이 날아온다</li><li>인류 언어·행동이 패턴화돼 있어 \"다음 단어\"만으로 대부분 재현</li><li>결론: 확률이라 <b>약한 게 아니라</b> 패턴을 압축했기에 <b>강력</b>. 다음은 발전사.</li></ul>","8":"<ul><li><b>파트 전환.</b> AI 발전은 3막 — <b>더 크게 → 더 효율적으로 → 모델+툴</b></li><li>\"이 흐름이 지금의 Claude Code로 이어진다\"고 예고</li><li>다음은 1막.</li></ul>","9":"<ul><li><b>1막 스케일링.</b> 주요 모델들이 시간순으로 <b>점점 커져온</b> 궤적 — 로고 점이 시간축을 따라 찍힌다</li><li>세로축=모델 크기, 가로축=시간. 우상향으로 커지는 흐름을 짚어주세요</li><li>단, 비용이 <b>기하급수</b>라 소수 빅테크만 가능했다는 한계 강조</li><li>다음은 이 판을 흔든 DeepSeek 충격.</li></ul>","10":"<ul><li><b>2막 효율.</b> 2025 DeepSeek — \"무조건 크게\"에서 <b>비용 1/10급으로 영리하게</b>로 충격</li><li>MoE·증류·경량화 등은 이름만 빠르게, 핵심은 <b>경쟁축 이동</b></li><li>펀치라인: \"누가 더 크냐\"→\"누가 더 <b>효율적</b>이냐\". 다음은 3막.</li></ul>","11":"<ul><li><b>3막 결정적 전환.</b> 모델 단독 → <b>모델 + 툴</b>(터미널·파일·브라우저)</li><li>손발이 생기자 \"대답\"이 \"<b>수행</b>\"으로 바뀌었다 — 오늘 주제의 뿌리</li><li>다음은 모델과 툴을 정확히 구분.</li></ul>","12":"<ul><li><b>용어 정리 (혼동 방지).</b> 모델=두뇌(Claude·GPT·Gemini), 툴=두뇌+손발(Claude Code·Codex)</li><li>\"Claude Code는 Claude가 아니라, Claude를 <b>감싼 실행 래퍼</b>\"라고 못박기</li><li>Codex = GPT를 감싼 툴. 다음은 왜 \"전용 툴\"이어야 하나.</li></ul>","13":"<ul><li><b>모델마다 확률분포가 다르다.</b> 같은 \"파일 정리해줘\"에도 Claude·GPT·Gemini가 <b>서로 다른 방향</b></li><li>우열이 아니라 습성 차이 — 그래서 모델·프롬프트·툴이 <b>한 세트로 sync</b>돼야</li><li>펀치라인: 그래서 \"모델 전용 툴\"이 강하다. 다음은 벤치마크 함정.</li></ul>","14":"<ul><li><b>벤치마크 함정.</b> 점수는 오픈소스·타사도 다 높다 — 그런데 <b>실전 코딩 체감</b>은 격차가 벌어진다</li><li>\"숫자만 보고 고르지 마라\" — 전용 툴 × 핏한 모델의 조합이 승부</li><li>다음은 그래서 벌어지는 에이전트 툴 전쟁.</li></ul>","15":"<ul><li><b>툴 생태계.</b> Claude Code·Codex·Antigravity·Stitch, 그리고 <b>사내 Slackbot</b>까지</li><li>핵심: 모델은 평준화, <b>\"어디에 어떻게 심느냐(툴)\"</b>가 유용성을 가른다</li><li>다음은 PART 3 — 바이브 코딩.</li></ul>","16":"<ul><li><b>파트 전환.</b> 드디어 오늘의 키워드 — 바이브 코딩</li><li>한 줄 정의 예고: <b>요구사항만 말하면 AI가 만든다</b></li><li>다음은 AI×코드의 3단계 진화.</li></ul>","17":"<ul><li><b>3단계 진화.</b> 챗봇 복붙 → 자동완성(FIM) → <b>에이전트가 직접 실행</b></li><li>아래 막대 짚으며 — 단계가 오를수록 <b>사람의 역할이 줄어든다</b></li><li>다음은 그 3단계의 끝, Claude Code.</li></ul>","18":"<ul><li><b>Claude Code 정의.</b> \"셸을 쥔 에이전트\" — 답만 주던 챗봇과 달리 <b>직접 실행·수정·디버깅</b></li><li>사람은 <b>요구사항만</b>, AI가 구현 전 과정을 수행</li><li>다음은 그럼 \"바이브 코딩\"이 정확히 뭔가.</li></ul>","19":"<ul><li><b>바이브 코딩 정의.</b> 의도를 말한다 → AI가 구현 → 사람이 판단, 이 루프</li><li>인용카드 강조: 자연어→코드 통역을 LLM이 대체 — \"개발\"에서 <b>\"코딩 시간\"</b>만 바뀌었다</li><li>다음은 사실 프로그래밍 언어도 번역기였다는 시각.</li></ul>","20":"<ul><li><b>추상화 계층 통찰.</b> 0/1→어셈블리→고급언어, 매 계층이 <b>번역기</b>였다</li><li>바이브코딩 = 그 위에 <b>자연어 한 겹</b> — LLM은 사실상 또 하나의 컴파일러</li><li>\"새로운 게 아니라 계층이 하나 더 늘었을 뿐\". 다음은 왜 코딩이 먼저 뚫렸나.</li></ul>","21":"<ul><li><b>다리 1/3.</b> 코딩이 가장 먼저·강하게 뚫린 이유: ①답이 정해짐 ②재사용이 근본 ③패턴화된 언어</li><li>\"패턴 + 재사용\"은 <b>확률 기계에 완벽히 들어맞는 먹잇감</b></li><li>다음: 그런데 왜 개발자는 대체 안 됐나.</li></ul>","22":"<ul><li><b>다리 2/3.</b> 직역기 vs 통역사 — LLM 이전 rule-base 번역이 어색했듯, <b>domain을 아는 통역사(개발자)</b>는 필요했다</li><li>펀치라인: SW엔지니어링은 답 찾기가 아니라 <b>피드백 보며 그때그때 최선을 고르는</b> 일</li><li>다음: 그래서 코딩 ≠ SW 엔지니어링.</li></ul>","23":"<ul><li><b>다리 3/3 (핵심 다리).</b> 코딩=정해진 답 짜기(AI가 잘함) ≠ SW엔지니어링=무엇을·왜·어떻게 설계·운영(사람 몫)</li><li>펀치라인이 PART4로 넘기는 문장: <b>구현이 쉬워져도 SaaS가 대체 안 되는 이유</b></li><li>다음은 바이브코딩의 현실 체크.</li></ul>","24":"<ul><li><b>가능 vs 함정.</b> 강력: 프로토타입·자동화·낯선 언어. 함정: 시야 좁음·요청 품질=결과 품질·<b>조용히 틀림</b></li><li>\"조용히 틀린다\"는 뒤 핸즈온의 직접 복선</li><li>펀치라인: \"어떻게\"는 AI, <b>\"무엇이 옳은지\"는 사람</b>. 다음은 PART 4.</li></ul>","25":"<ul><li><b>파트 전환.</b> 그래도 SaaS가 강하다 — 구현이 쉬워질수록 <b>진짜 가치는 다른 곳</b></li><li>\"영업하는 우리에게 가장 중요한 파트\"라고 무게 실기</li><li>다음: 사실 구현은 원래도 어렵지 않았다.</li></ul>","26":"<ul><li><b>전제 뒤집기.</b> Google·AWS·삼성SDS 같은 곳은 <b>구현 자체로 고생한 적 없다</b></li><li>AI가 구현 비용을 낮춘 건 맞지만 — 그건 SW의 <b>핵심 난제가 아니었다</b></li><li>다음: 그럼 진짜 어려움은 뭔가 (빙산).</li></ul>","27":"<ul><li><b>빙산 비유.</b> 수면 위(구현)는 AI가 잘하는 작은 부분, 수면 아래가 진짜</li><li>아래를 하나씩 짚기: <b>유지보수·회귀·보안·엣지케이스·조직 커뮤니케이션</b></li><li>\"여기가 사람·조직·시스템의 영역\". 다음은 자동차 비유.</li></ul>","28":"<ul><li><b>만들 수 있다 ≠ 직접 만든다.</b> AI·로봇으로 내 차를 만들 수 있어도 현대·테슬라를 산다</li><li>자전거·가전 사례 — 심지어 상당수가 <b>OEM 중국 생산</b>인데도 브랜드를 산다</li><li>\"만드는 건 중요하지만 <b>핵심이 아니다</b>\". 다음은 개발자에게 더 와닿는 예.</li></ul>","29":"<ul><li><b>build vs buy (개발자 버전).</b> 조립 PC가 더 싸고 스펙도 좋아도 기업은 <b>Dell 완제품</b>을 산다</li><li>이유: <b>AS·워런티·리스크·시간</b> — \"싸다\"는 눈에 보이는 비용뿐, <b>숨은 비용</b>이 더 크다</li><li>SaaS도 책임·안정성·시간을 사는 것. 다음은 가격이 뒤집는 요리 비유.</li></ul>","30":"<ul><li><b>가격 민감도.</b> 해 먹는 게 쌀 수 있어도 사 먹는 게 경제적 — 그런데 <b>외식 물가 오르자</b> 판단이 뒤집혔다</li><li>즉 <b>비용 수용성(가격 민감도)</b>이 build-vs-buy를 좌우, 절대 정답 없음</li><li>SaaS도 <b>비용 통제·가격 최적화</b>가 핵심 운영 요소. 다음은 기술부채.</li></ul>","31":"<ul><li><b>기술부채 심화.</b> 이제 <b>누구나</b> SaaS를 만드는데, 역량 없이 만든 시스템은…</li><li>5개 카드 짚기: 버그·엣지케이스·보안·비효율 폭증·<b>담당자 휴가도 못 감</b></li><li>기술부채·인지부채 = 결국 전부 <b>비용</b>. 다음은 SaaS 경제학(방송국).</li></ul>","32":"<ul><li><b>방송국 구조 = SaaS 경제학.</b> 제작비는 고정, 시청자 늘수록 <b>1인당 비용은 0으로 수렴</b></li><li>\"고정비를 <b>많은 고객이 분담</b>\" — 규모의 경제를 시각으로 각인</li><li>다음: 그래서 SaaS가 오히려 싸다.</li></ul>","33":"<ul><li><b>Build vs Buy 결론.</b> 직접 구축=비싼 인력×수년+운영, 구독=여러 고객이 <b>분담</b></li><li>진짜 비용은 라이선스가 아니라 <b>기회비용</b> — 비싼 인재를 non-core에 묶는 손실</li><li>핵심 명제: <b>Core는 직접, Non-core는 사서</b>. 다음은 커스터마이징 함정.</li></ul>","34":"<ul><li><b>순정으로 써야 가치를 누린다.</b> 과도한 커스텀 = 규모의 경제에서 <b>이탈</b>, 혼자 부담</li><li>커스텀 많을수록 자동 업그레이드 충돌·버그도 혼자 수리·중복 개발</li><li>순정+검증된 파트너 앱이면 업그레이드·보안을 <b>공짜로 상속</b>. 다음: 이걸 30년 시스템화한 곳.</li></ul>","35":"<ul><li><b>= Salesforce (해자 ①).</b> 24/7 인프라·모니터링·회귀·기능 진화를 <b>30년간 시스템화</b></li><li>펀치라인: 해자는 <b>구현이 아니라 운영·신뢰·표준화</b></li><li>다음은 해자 ② — 모델과 툴은 한 세트.</li></ul>","36":"<ul><li><b>해자 ②.</b> 모델의 generation 방식 + 거기 맞춘 prompt·context = <b>혁명적 성능</b></li><li>Claude×Claude Code는 시너지 폭발, Claude Code×타 모델은 어긋나 아쉽다</li><li>펀치라인: LLM은 확률 계산기라 <b>prompt에서 자유로울 수 없다</b>. 다음은 진짜 해자.</li></ul>","37":"<ul><li><b>해자 ③ — 경험과 노하우.</b> \"모델 잘 만드는 싸움\"과 \"모델 잘 <b>쓰는</b> 싸움\"은 별개 시장(Cursor 인수가 증명)</li><li>데이터 부족은 따라잡히지만, <b>CRM에 뭐가 맞는지·없으면 불편한 경험</b>을 아는 건 절대적 강점</li><li>그게 Salesforce가 30년 쌓은 것. 다음은 Salesforce×Anthropic.</li></ul>","38":"<ul><li><b>Salesforce × Anthropic 파트너십</b> (Dreamforce 2025.10, 확장 중)</li><li>3가지: ①Agentforce의 <b>preferred 모델</b>(VPC 안, 규제산업) ②Claude↔Slack 양방향(Claude Tag) ③서로의 제품을 씀</li><li>Claude 생태계 커질수록 <b>Salesforce 생산성도 함께</b> 커지는 선순환. 다음: 그래도 안심은 금물.</li></ul>","39":"<ul><li><b>균형 잡기.</b> SaaS의 <b>논리</b>가 산다는 것이지 아무것도 안 해도 산다는 뜻 아님</li><li>SaaS 본질 = 비용 대비 <b>생산성 증대 경험</b> — 그 크기가 더 부각되는 시점</li><li>두 생존 질문: ①<b>못 풀던 걸 푼다</b>(Palantir) ②<b>하던 걸 더 싸게</b>(Claude Code)</li><li>지금 뭘 가졌나보다 <b>뭘 만들어 가는가</b>. 다음은 실제 사례들.</li></ul>","40":"<ul><li><b>사례 갤러리.</b> ①에 Palantir(예측 오차 붕괴)·Tesla(SW만으로 주행)·AppLovin(광고 정밀도), ②에 Claude Code(개발비·시간 삭제)</li><li>\"성장한 회사 특징이 <b>자명</b>하다\" — 두 유형 중 하나</li><li>시총·수치 한두 개만 크게 짚기. 다음은 이 구도가 주는 시장 통찰.</li></ul>","41":"<ul><li><b>시장 무게중심.</b> 지금 밸류·매출은 ①(못 풀던 걸)에 쏠림 — <b>기술 초기 단계</b>의 현상</li><li>숙련 단계로 갈수록 <b>경제성(②)</b>이 중요, AI는 아직 발전 단계</li><li>핵심: <b>Salesforce는 명백히 ②에 포지셔닝</b> — 메시지도 명확</li><li>이론 파트 마무리. 다음은 질문 받기.</li></ul>","42":"<ul><li><b>이론 Q&A (실시간 질문).</b> 청중이 하단 입력창에 질문 → 화면에 <b>포스트잇</b>으로, 👍 투표</li><li>지금까지를 한 줄 요약: 확률기계·발전사·바이브코딩·SaaS 해자</li><li>질문 <b>1~2분 받고</b> 정리 — 답하며 자연스럽게 핸즈온으로 넘어간다. 다음은 HANDS-ON A.</li></ul>","43":"<ul><li><b>핸즈온 A 시작.</b> \"숫자는 거짓말 안 한다, 정말?\" — 매출 대시보드를 AI에게 시킨다</li><li>이 파트의 트랩: <b>매출의 정의</b>. 지금은 흥미만 자극하고 넘어간다</li><li>다음은 실습 준비.</li></ul>","44":"<ul><li><b>실습 준비 (퍼실리테이션).</b> ①빈 폴더+터미널 이동 ②<code>claude</code> 실행 ③데이터는 API로 (다운로드 X)</li><li>화면에 <b>BASE_URL을 크게 띄워주기</b> — 모두 같은 데이터</li><li>다들 <code>claude</code> 뜬 것 확인하고 진행. 다음은 데이터 구조.</li></ul>","45":"<ul><li><b>필드 설명 (트랩의 씨앗).</b> owner_ae·account·arr는 빠르게, <b>stage(Closed Won·Negotiation·Proposal)</b>에서 잠깐 멈춘다</li><li>일부러 stage를 강조하되 함정은 아직 발설 X — \"단계를 말해줍니다\" 정도</li><li>다음은 실제로 던질 프롬프트.</li></ul>","46":"<ul><li><b>STEP 1 프롬프트 (다 같이 실행).</b> \"AE별 매출 합계 막대그래프, 누가 1등인지\"를 <b>그대로 복붙</b>하라고 안내</li><li>완성되면 <b>\"누가 1등이에요?\"</b>를 청중에게 물어 답을 받는다 (대부분 정수빈)</li><li>1~2분 대기. 다음 슬라이드에서 결과 확인.</li></ul>","47":"<ul><li><b>트랩 1단계 — 정수빈 1위.</b> \"에러 0, 화면 깔끔, 막대그래프 완성 — 구현은 성공\"</li><li>\"이대로 <b>경영 보고</b> 하면 될까요?\"로 의심의 씨앗을 심고 <b>멈춘다</b></li><li>다음 슬라이드가 반전 — 여기서 답을 주지 말 것.</li></ul>","48":"<ul><li><b>리빌 비트.</b> \"확정 매출(Closed Won)만 보면\" 하고 오른쪽 랭킹을 공개</li><li>1위 정수빈은 사실 <b>6등</b>, 진짜 1위는 <b>박영희</b> — 순위가 통째로 뒤집힘</li><li>▲▼ 화살표 짚으며 <b>\"순위 역전\"</b>을 극적으로. 다음: 왜 그랬나.</li></ul>","49":"<ul><li><b>원인 분석.</b> 전체 파이프라인(제안+협상+완료) ≠ 확정 매출(Closed Won만)</li><li>핵심: <b>AI 코드는 틀리지 않았다</b> — 시킨 대로 완벽히 더했을 뿐. 정수빈은 미확정 가망 딜이 많았다</li><li>\"가망을 매출로 칠까\"는 <b>비즈니스 정의</b> — AI는 모른다. 다음: 그럼 어떻게 시켰어야.</li></ul>","50":"<ul><li><b>올바른 프롬프트.</b> 우리 프롬프트는 '매출' 정의를 AI에 떠넘김 → 다 합산</li><li>정답: \"<b>Closed Won만 인정, 진행 딜 제외</b>\"처럼 <b>기준을 사람이 정의</b></li><li>펀치라인: AI는 구현, <b>\"무엇이 매출인가\"는 사람</b>. 다음은 A 착지.</li></ul>","51":"<ul><li><b>A 착지 (CRM 연결).</b> AI는 구현하지만 \"무엇이 매출인가\" 정의는 못 한다</li><li>그 정의(Stage·Forecast Category·Revenue Recognition)를 <b>조직 전체에 일관 강제 = Salesforce</b></li><li>\"이게 왜 CRM이 필요한지\"로 매듭. 다음은 HANDS-ON B.</li></ul>","52":"<ul><li><b>핸즈온 B 시작.</b> 이번엔 \"총 매출 43억\" — <b>구현은 완벽한데 숫자가 맞나?</b></li><li>A가 <b>정의</b>의 함정이었다면 B는 <b>데이터 구조</b>의 함정임을 예고</li><li>다음은 준비.</li></ul>","53":"<ul><li><b>B 준비.</b> 새 빈 폴더+<code>claude</code>, 이번엔 <b>매출 트랜잭션</b> API</li><li>필드 짚기: region·channel·category·segment·amount·units·date</li><li>모두 준비됐는지 확인 후 진행. 다음은 프롬프트.</li></ul>","54":"<ul><li><b>STEP 1 프롬프트 (다 같이).</b> \"Tableau 스타일 매출 대시보드, 필터+총매출/건수 KPI\" 그대로 복붙</li><li>완성되면 <b>\"총 매출 얼마 나와요?\"</b>를 물어 답 받기 (대부분 43억 근처)</li><li>1~2분 대기. 다음에서 결과 확인.</li></ul>","55":"<ul><li><b>트랩 1단계 — 43억.</b> \"에러 0, KPI·차트·필터 다 동작 — 완벽해 보인다\"</li><li>\"이대로 <b>보고</b>하면 될까요?\" 하고 의심만 심고 멈춘다</li><li>다음 슬라이드가 충격 반전 — 답 미리 주지 말 것.</li></ul>","56":"<ul><li><b>충격 리빌.</b> 실제 전체를 세면 <b>7,425억</b> — 화면의 43억은 실제의 <b>0.58%</b>, 약 <b>172배 과소</b></li><li>카운트업 애니 뜨는 동안 \"화면은 완벽한데 숫자는 완전히 틀렸다\"를 각인</li><li>\"왜 이렇게 됐을까?\"로 다음 두 장(원인) 예고.</li></ul>","57":"<ul><li><b>원인 ① 페이지네이션.</b> API가 조용히 <b>첫 100건만</b> 반환 — total·next가 없어 \"전부\"처럼 보였다</li><li>실제는 15,000건 = 100건씩 <b>150페이지</b>, 전부 순회해야 함</li><li>\"모르는 데이터는 AI도 못 가져온다\". 다음은 원인 ② 성능.</li></ul>","58":"<ul><li><b>원인 ② 딜레이/캐싱.</b> 페이지마다 지연 → 150페이지 75초, <b>필터 누를 때마다 또</b> 멈춘다</li><li>해법은 <b>캐싱</b>(한 번만 받고 이후 즉시) — 하지만 \"이 데이터는 고정\"임을 <b>AI는 미리 알 수 없다</b></li><li>이 부분이 캐싱 지식 유무로 품질 갈림. 다음: 어떻게 시켰어야.</li></ul>","59":"<ul><li><b>올바른 프롬프트.</b> \"<b>100건씩 페이지네이션이니 전부 순회</b>, 데이터 고정이니 <b>한 번만 받아 캐싱</b>\"</li><li>완전성(순회) + 성능(캐싱) 둘 다 <b>사람이 알아야</b> 지시 가능</li><li>펀치라인: AI는 <b>주어진 정보 안에서만</b> 완벽. 다음은 B 착지.</li></ul>","60":"<ul><li><b>B 착지.</b> AI는 주어진 것으로 완벽 구현하지만 <b>\"무엇이 전부인가\" 정보 확보는 사람 몫</b></li><li>데이터 구조·API 계약·stakeholder를 <b>이해한 사람만 완전한 시스템</b>을 만든다</li><li>A·B를 한 문장으로 묶어 정리. 다음은 HANDS-ON C — 에이전트 만들기.</li></ul>","61":"<ul><li><b>핸즈온 C 시작.</b> 이번엔 만들기 — <b>API 미로를 스스로 푸는 에이전트</b></li><li>핵심 규칙: <b>두뇌는 Opus로 고정</b> — 지능이 아니라 <b>잘 설계한 에이전트</b>가 이긴다</li><li>승부욕 자극하고 다음은 과제 개요.</li></ul>","62":"<ul><li><b>과제 개요 (퍼실리테이션).</b> ①에이전트를 직접 만든다 ②API 미로를 자율 탐색해 관문 통과→FLAG ③두뇌는 Opus 고정(지능이 아니라 설계로 뚫기)</li><li>\"똑똑한 모델이 대신 풀어주는 게 아니라 <b>여러분 설계 실력</b>이 드러난다\"</li><li>구현은 Claude Code가 돕지만 <b>설계는 여러분 몫</b>. 다음은 복붙 프롬프트.</li></ul>","63":"<ul><li><b>초기 프롬프트 배포.</b> <b>복사 버튼</b>으로 8개 조건 프롬프트를 그대로 붙여넣게 안내</li><li>(닉네임)·{BASE_URL}은 <b>자동 치환</b>됨을 강조 — 손대지 말 것</li><li>핵심 조건 짚기: 챗봇형 UI·Opus 고정·bash tool로 API 자율탐색·게이트웨이 호출법·<code>/maze/start</code></li><li>다들 실행 시작하면 다음 리더보드로 넘긴다.</li></ul>","64":"<ul><li><b>실시간 리더보드 (경쟁 무대).</b> 참가자가 미로를 시작하면 여기 <b>LIVE로 등장</b>, 진행을 중계</li><li>이 슬라이드를 <b>띄워둔 채</b> 돌아다니며 막힌 참가자 코칭 (게이트웨이 호출·페이지네이션 힌트)</li><li>선두·통과자 나올 때마다 호명해 분위기 끌어올리기. 대부분 풀면 다음 마무리로.</li></ul>","65":"<ul><li><b>C 마무리 — \"이게 에이전트다\".</b> 관찰→기억·판단→다음 행동, 이 <b>루프</b>를 방금 만든 것</li><li>한 번 묻고 끝이 아니라 <b>반복하는 루프</b>가 핵심</li><li>구현은 Claude가 했어도 <b>\"어떻게 풀지\" 설계는 여러분</b> — 그게 실력</li><li>펀치라인: 구현이 쉬워질수록 <b>무엇을·어떻게 만들지 아는 사람</b>이 강해진다. 다음은 클로징.</li></ul>","67":"<ul><li><b>클로징.</b> 오늘의 한 줄: <b>AI는 구현을, 사람은 판단을, Salesforce는 시스템을</b></li><li>세 칩(확률기계·모델+툴·운영의 해자)으로 전체 아크를 회수</li><li><b>피드백 남기기</b> 버튼 안내 — 꼭 남겨달라고 요청하고 감사 인사로 마무리.</li></ul>"};

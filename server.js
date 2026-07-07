@@ -207,16 +207,33 @@ document.getElementById('dl').addEventListener('click',()=>{
   res.end(body);
 }
 
+// In-memory static cache: read each file from disk once, then serve from RAM.
+// t3.micro disk reads were adding ~0.5–1.3s per asset; this makes repeats instant.
+const staticCache = new Map();
 function serveStatic(req, res) {
   let urlPath = req.url.split('?')[0];
   if (urlPath === '/') urlPath = '/index.html';
   const filePath = path.join(PUBLIC_DIR, path.normalize(urlPath));
   if (!filePath.startsWith(PUBLIC_DIR)) { res.writeHead(403); return res.end(); }
+  const ext = path.extname(filePath);
+  // Cache policy: app CODE (html/js/css) must always revalidate so a deploy is
+  // instantly visible — otherwise a browser could show a stale deck for a day.
+  // Only rarely-changing binary assets (images/svg/fonts) get a long cache.
+  const codeExt = ext === '.html' || ext === '.js' || ext === '.css';
+  const cacheHdr = codeExt ? 'no-cache, must-revalidate' : 'public, max-age=86400';
+
+  const send = (content) => {
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Cache-Control': cacheHdr });
+    res.end(content);
+  };
+  const hit = staticCache.get(filePath);
+  if (hit) return send(hit);
   fs.readFile(filePath, (err, content) => {
     if (err) { res.writeHead(404); return res.end('Not found'); }
-    const ext = path.extname(filePath);
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
-    res.end(content);
+    // still memory-cache code files (fast serve) but they carry no-cache headers,
+    // so the browser re-fetches and always gets the latest deployed version.
+    staticCache.set(filePath, content);
+    send(content);
   });
 }
 
@@ -372,6 +389,14 @@ const server = http.createServer(async (req, res) => {
     return sendJson(res, 200, { leaderboard: maze.leaderboard() });
   }
 
+  // Presenter: reset the maze leaderboard (clear all sessions)
+  if (url === '/maze/reset' && req.method === 'POST') {
+    if (!isPresenter(req)) return sendJson(res, 403, { error: 'forbidden' });
+    maze.reset();
+    broadcastMaze();
+    return sendJson(res, 200, { ok: true });
+  }
+
   // SSE stream
   if (url === '/events' && req.method === 'GET') {
     res.writeHead(200, {
@@ -506,6 +531,16 @@ const server = http.createServer(async (req, res) => {
     if (!isPresenter(req)) return sendJson(res, 403, { error: 'forbidden' });
     state.questions = [];
     broadcast('clear', {});
+    return sendJson(res, 200, { ok: true });
+  }
+
+  // Presenter: dismiss a single question (remove its bubble everywhere)
+  if (url === '/questions/dismiss' && req.method === 'POST') {
+    if (!isPresenter(req)) return sendJson(res, 403, { error: 'forbidden' });
+    const body = await readBody(req);
+    const id = Number(body.id);
+    state.questions = state.questions.filter((q) => q.id !== id);
+    broadcast('dismiss', { id });
     return sendJson(res, 200, { ok: true });
   }
 

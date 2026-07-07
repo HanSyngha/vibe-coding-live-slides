@@ -86,6 +86,7 @@ function newSession(name) {
   const sess = {
     id, name, createdAt: Date.now(), lastActiveAt: Date.now(),
     gate: 1,            // 1..5 working, 6 = done
+    gateReachedAt: Date.now(), // when the CURRENT gate was entered — tiebreak: same gate → earlier wins
     attempts: { g1: 0, g2: 0, g3: 0, g4: 0, g5: 0 },
     // gate1
     sentence, g1order, g1served: 0,
@@ -171,7 +172,7 @@ function gate1Answer(sess, sentence) {
   const correct = sess.sentence.join(' ');
   const norm = (s) => String(s || '').trim().replace(/\s+/g, ' ');
   if (norm(sentence) === norm(correct)) {
-    sess.gate = 2;
+    sess.gate = 2; sess.gateReachedAt = Date.now();
     return { passed: true, gate_cleared: 1, next: 'gate2', gate2_token: sess.tokG2,
       message: '관문 1 통과! gate2(격자 탈출)로. gate2_token이 필요합니다.' };
   }
@@ -211,7 +212,7 @@ function gate2Move(sess, dir, token) {
   }
   sess.pos = { x: nx, y: ny };
   if (k === sess.grid.exit) {
-    sess.gate = 3;
+    sess.gate = 3; sess.gateReachedAt = Date.now();
     return { gate: 2, result: 'exit', pos: { ...sess.pos }, steps: sess.g2steps, passed: true,
       gate_cleared: 2, next: 'gate3', gate3_token: sess.tokG3, message: '관문 2 통과! gate3로. gate3_token 필요.' };
   }
@@ -239,7 +240,7 @@ function gate3Next(sess, token, proof) {
   if (String(proof) !== g3proof(last))
     return expireSession(sess, 'gate3에서 잘못된 proof를 보냈습니다.'); // CRITICAL → expire
   if (sess.g3idx >= sess.chain.length) {
-    sess.gate = 4;
+    sess.gate = 4; sess.gateReachedAt = Date.now();
     return { gate: 3, passed: true, gate_cleared: 3, all_pieces: sess.g3collected,
       next: 'gate4', gate4_token: sess.tokG4, message: '관문 3 통과! gate4(보안 관문)로. gate4_token 필요.' };
   }
@@ -353,7 +354,7 @@ function gate4Next(sess, token, body) {
   // round passed.
   sess.g4idx++;
   if (sess.g4idx >= G4_ROUNDS) {
-    sess.gate = 5;
+    sess.gate = 5; sess.gateReachedAt = Date.now();
     return { gate: 4, passed: true, gate_cleared: 4, next: 'gate5', gate5_token: sess.tokG5,
       message: `관문 4 통과! ${G4_ROUNDS}번의 인젝션 시도를 모두 거부했습니다. 마지막 gate5(복구)로. gate5_token 필요.` };
   }
@@ -413,6 +414,7 @@ function progressOf(sess) {
       g5: { step: sess.g5step, target: G5_TARGET, glitched: sess.g5glitched.length },
     },
     lastActiveAt: sess.lastActiveAt || sess.createdAt,
+    gateReachedAt: sess.gateReachedAt || sess.createdAt,
   };
 }
 function scoreOf(sess) {
@@ -427,14 +429,22 @@ function scoreOf(sess) {
 function leaderboard() {
   return [...sessions.values()]
     .sort((a, b) => {
-      // solved first (by time), then active (by score), then expired/failed at the bottom
+      // 1) solved first — fastest solver (earliest solvedAt) is #1
       if (a.solvedAt && b.solvedAt) return a.solvedAt - b.solvedAt;
       if (a.solvedAt) return -1;
       if (b.solvedAt) return 1;
+      // 2) active (not expired) ranks above expired/failed
       if (a.expired !== b.expired) return a.expired ? 1 : -1;
+      // 3) higher gate first (further in the maze = better)
+      if (a.gate !== b.gate) return b.gate - a.gate;
+      // 4) same gate → more progress within the gate first
       const sd = scoreOf(b) - scoreOf(a);
       if (sd !== 0) return sd;
-      return (b.lastActiveAt || b.createdAt) - (a.lastActiveAt || a.createdAt);
+      // 5) still tied on same gate → whoever REACHED this gate earlier wins (더 빠른 순)
+      const ga = a.gateReachedAt || a.createdAt, gb = b.gateReachedAt || b.createdAt;
+      if (ga !== gb) return ga - gb;
+      // 6) final fallback → earlier starter
+      return a.createdAt - b.createdAt;
     })
     .map(progressOf);
 }
@@ -446,4 +456,5 @@ module.exports = {
   getSession: (id) => sessions.get(id),
   allProgress: () => [...sessions.values()].map(progressOf),
   touch: (sess) => { if (sess) sess.lastActiveAt = Date.now(); },
+  reset: () => { sessions.clear(); }, // 리더보드 초기화 (모든 세션 삭제)
 };

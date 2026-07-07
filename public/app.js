@@ -49,6 +49,7 @@
 
   // ---- presence (접속자 목록) — both presenter & audience ----
   let presenceNames = [];
+  let presenceSeen = false; // skip toasting the initial presence snapshot
   function togglePresenceList() {
     const box = document.getElementById('presence-list');
     if (!box) return;
@@ -65,6 +66,23 @@
         const av = typeof p === 'string' ? '' : p.avatar;
         return '<div class="pl-row">' + avatarImg(av, 'pl-av') + '<span>' + esc(nm) + '</span></div>';
       }).join('');
+  }
+
+  // Toast "OO님이 입장하셨습니다" sliding in from the right
+  function toastEnter(n) {
+    const nm = typeof n === 'string' ? n : (n.name || '익명');
+    const av = typeof n === 'string' ? '' : n.avatar;
+    let layer = document.getElementById('enter-toasts');
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.id = 'enter-toasts';
+      document.body.appendChild(layer);
+    }
+    const t = document.createElement('div');
+    t.className = 'enter-toast';
+    t.innerHTML = avatarImg(av, 'et-av') + '<span><b>' + esc(nm) + '</b>님이 입장했어요</span>';
+    layer.appendChild(t);
+    setTimeout(() => { t.classList.add('leaving'); setTimeout(() => t.remove(), 450); }, 3200);
   }
 
   // Always-visible nickname chip (audience only) — logo + name, click to edit
@@ -94,6 +112,103 @@
     setupMazePrompt(); // fill nickname + wire copy button on the maze prompt slide
     addCopyButtons();  // add a copy button to every other prompt box
     wireFeedbackCta(); // wire the "피드백 남기기" button on the closing slide
+    runCountUps();     // animate any data-countup numbers on this slide
+    runConfetti();     // fire confetti on the closing slide
+    renderNote(s, i);  // presenter-only speaker notes
+  }
+
+  // Speaker notes — visible ONLY on the presenter screen (like slide notes).
+  // Note text comes from the slide's inline `note`, else window.SLIDE_NOTES[index].
+  const SLIDE_NOTES = window.SLIDE_NOTES || {};
+  function renderNote(s, i) {
+    if (!IS_PRESENTER) return;
+    let panel = document.getElementById('note-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'note-panel';
+      panel.innerHTML = '<div class="note-head">🎤 발표 노트 <button id="note-toggle" title="접기/펼치기">▾</button></div><div class="note-body" id="note-body"></div>';
+      document.body.appendChild(panel);
+      panel.querySelector('#note-toggle').onclick = () => panel.classList.toggle('collapsed');
+    }
+    const body = panel.querySelector('#note-body');
+    const note = (s && s.note) ? s.note : (SLIDE_NOTES[i] || '');
+    if (!note) { panel.classList.add('empty'); body.innerHTML = '<span class="note-empty">— 이 슬라이드엔 노트가 없습니다 —</span>'; }
+    else { panel.classList.remove('empty'); body.innerHTML = note; }
+  }
+
+  // Count-up: <span class="cu" data-countup="7425" data-dur="1600" data-delay="700">0</span>
+  function runCountUps() {
+    const els = stage.querySelectorAll('[data-countup]');
+    els.forEach((el) => {
+      const target = parseFloat(el.getAttribute('data-countup')) || 0;
+      const dur = parseInt(el.getAttribute('data-dur') || '1000', 10);
+      const delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      const fmt = (n) => Math.round(n).toLocaleString('en-US');
+      el.textContent = '0';
+      let raf;
+      const start = () => {
+        let t0 = null;
+        const step = (ts) => {
+          if (t0 === null) t0 = ts;
+          const p = Math.min(1, (ts - t0) / dur);
+          // easeOutCubic
+          const e = 1 - Math.pow(1 - p, 3);
+          el.textContent = fmt(target * e);
+          if (p < 1) raf = requestAnimationFrame(step);
+        };
+        raf = requestAnimationFrame(step);
+      };
+      if (delay) setTimeout(start, delay); else start();
+    });
+  }
+
+  // Confetti burst on the closing slide (canvas, no deps). Fires once per entry.
+  let confettiRAF = null;
+  function runConfetti() {
+    if (confettiRAF) { cancelAnimationFrame(confettiRAF); confettiRAF = null; }
+    const old = document.getElementById('confetti-canvas');
+    if (old) old.remove();
+    if (!stage.querySelector('.closing-slide') && !stage.classList.contains('closing-slide')) return;
+    const cv = document.createElement('canvas');
+    cv.id = 'confetti-canvas';
+    cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60';
+    document.body.appendChild(cv);
+    const ctx = cv.getContext('2d');
+    const W = cv.width = innerWidth, H = cv.height = innerHeight;
+    const colors = ['#3d4eff', '#00b383', '#ff5c49', '#ffd84d', '#8b5cf6'];
+    const N = 140;
+    const parts = [];
+    for (let i = 0; i < N; i++) {
+      parts.push({
+        x: W / 2 + (i % 7 - 3) * 30, y: H * 0.42,
+        vx: (i * 2654435761 % 1000 / 1000 - 0.5) * 14,      // deterministic spread (no Math.random dependence issue)
+        vy: -(6 + (i * 40503 % 1000) / 1000 * 9),
+        w: 7 + (i % 5) * 2, h: 10 + (i % 4) * 3,
+        rot: (i % 360), vr: (i % 2 ? 1 : -1) * (4 + i % 6),
+        color: colors[i % colors.length], life: 0,
+      });
+    }
+    const G = 0.28;
+    let frame = 0;
+    const draw = () => {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+      let alive = 0;
+      for (const p of parts) {
+        p.vy += G; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.rot += p.vr; p.life++;
+        if (p.y < H + 40) alive++;
+        const alpha = Math.max(0, 1 - p.life / 160);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+      if (alive > 0 && frame < 260) confettiRAF = requestAnimationFrame(draw);
+      else { cv.remove(); confettiRAF = null; }
+    };
+    confettiRAF = requestAnimationFrame(draw);
   }
 
   // ============================================================ FEEDBACK (audience)
@@ -137,6 +252,30 @@
   }
 
   // ============================================================ COPY BUTTONS
+  // Robust copy that works even on http (non-secure) contexts, where
+  // navigator.clipboard is unavailable/blocked (esp. Safari/Chrome on Mac).
+  // Falls back to a hidden textarea + execCommand('copy').
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(() => legacyCopy(text));
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+      ta.setAttribute('readonly', '');
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length); // iOS/Safari
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch (e) { return false; }
+  }
+
   // Add a "📋 복사" button to every prompt box's header (skips the maze one, which
   // already has its own nickname-aware button). Copies the <code> block's text.
   function addCopyButtons() {
@@ -149,10 +288,9 @@
       btn.className = 'copy-btn';
       btn.textContent = '📋 복사';
       btn.onclick = () => {
-        navigator.clipboard.writeText(code.textContent).then(() => {
-          btn.textContent = '✓ 복사됨';
-          setTimeout(() => { btn.textContent = '📋 복사'; }, 1500);
-        });
+        copyText(code.textContent);
+        btn.textContent = '✓ 복사됨';
+        setTimeout(() => { btn.textContent = '📋 복사'; }, 1500);
       };
       head.appendChild(btn);
     });
@@ -169,10 +307,9 @@
     if (btn && !btn.dataset.wired) {
       btn.dataset.wired = '1';
       btn.onclick = () => {
-        navigator.clipboard.writeText(code.textContent).then(() => {
-          btn.textContent = '✓ 복사됨';
-          setTimeout(() => { btn.textContent = '📋 복사'; }, 1500);
-        });
+        copyText(code.textContent);
+        btn.textContent = '✓ 복사됨';
+        setTimeout(() => { btn.textContent = '📋 복사'; }, 1500);
       };
     }
   }
@@ -196,12 +333,24 @@
       setTally(st.reactions);
       qHistory = (st.questions || []).slice(); // full history for presenter panel
       renderHistory();
-      (st.questions || []).slice(-4).forEach((q) => flyQuestion(q, true));
+      // Do NOT re-fly old question bubbles on (re)connect — they're ephemeral.
+      // Mark them "already seen" so a refresh shows a clean stage; only genuinely
+      // new questions (via the 'question' event after now) will pop as post-its.
+      (st.questions || []).forEach((q) => shownQ.add(q.id));
     });
 
     es.addEventListener('presence', (e) => {
       const d = JSON.parse(e.data);
-      presenceNames = d.names || [];
+      const names = d.names || [];
+      // toast newcomers (skip the first snapshot to avoid a flood on connect)
+      if (presenceSeen) {
+        const prev = new Set(presenceNames.map((n) => n.name + '|' + n.avatar));
+        names.forEach((n) => {
+          if (!prev.has(n.name + '|' + n.avatar)) toastEnter(n);
+        });
+      }
+      presenceSeen = true;
+      presenceNames = names;
       const chip = document.getElementById('presence-chip');
       const num = document.getElementById('presence-num');
       if (num) num.textContent = d.count || 0;
@@ -244,6 +393,13 @@
       bumpTally(d.kind);
     });
     es.addEventListener('clear', () => { qlayer.innerHTML = ''; shownQ.clear(); qHistory = []; renderHistory(); });
+    es.addEventListener('dismiss', (e) => {
+      const { id } = JSON.parse(e.data);
+      const b = qlayer.querySelector('.q-bubble[data-id="' + id + '"]');
+      if (b) { b.classList.add('leaving'); setTimeout(() => b.remove(), 400); }
+      shownQ.delete(id);
+      qHistory = qHistory.filter((q) => q.id !== id); renderHistory();
+    });
     es.addEventListener('maze', (e) => {
       mazeData = JSON.parse(e.data).leaderboard || [];
       renderMazeBoard();
@@ -274,6 +430,16 @@
   function renderMazeBoard() {
     const board = document.getElementById('maze-board');
     if (!board) return; // only present on the leaderboard slide
+    // presenter-only reset button
+    const rb = document.getElementById('lb-reset');
+    if (rb && IS_PRESENTER && !rb.dataset.wired) {
+      rb.dataset.wired = '1';
+      rb.classList.remove('hidden');
+      rb.onclick = () => {
+        if (!confirm('리더보드를 초기화할까요? 모든 참가자 진행이 사라집니다.')) return;
+        fetch('/maze/reset?key=' + encodeURIComponent(PRESENT_KEY), { method: 'POST' });
+      };
+    }
     if (!mazeData.length) {
       board.innerHTML = '<div class="mb-empty">아직 참가자가 없습니다 — 미로를 시작하면 여기에 실시간으로 나타납니다!</div>';
       return;
@@ -344,6 +510,7 @@
     b.className = 'q-bubble';
     b.dataset.id = q.id;
     b.innerHTML =
+      (IS_PRESENTER ? '<button class="q-x" title="치우기">✕</button>' : '') +
       '<span class="q-name">' + esc(q.name || '익명') + '</span>' +
       esc(q.text) +
       '<span class="q-vote" data-id="' + q.id + '">👍 <b class="vnum">' + (q.votes || 0) + '</b></span>';
@@ -360,6 +527,11 @@
     b.querySelector('.q-vote').addEventListener('click', () => {
       api('/questions/vote', { id: q.id });
     });
+    // presenter can dismiss a post-it immediately (removes it everywhere)
+    if (IS_PRESENTER) {
+      const x = b.querySelector('.q-x');
+      if (x) x.addEventListener('click', () => api('/questions/dismiss', { id: q.id }));
+    }
 
     // auto-dismiss after a while to avoid clutter
     setTimeout(() => {
@@ -479,7 +651,7 @@
       .then((r) => r.json()).then((d) => {
         document.getElementById('fbs-count').textContent = d.count || 0;
         const body = document.getElementById('fbs-body');
-        const labels = { q1: '현업 도움', q2: '난이도 적절', q3: 'AI 이해도' };
+        const labels = { q1: '실무 메시지', q2: 'SaaS 관점', q3: '추천 의향' };
         const bar = (v) => '<div class="fbs-bar"><i style="width:' + (v / 5 * 100) + '%"></i></div>';
         // overall score (big)
         let h = '<div class="fbs-overall"><div class="fbs-ov-num">' + (d.overall || 0).toFixed(1) +
@@ -597,8 +769,8 @@
     });
 
     // edit mode: prefill current name, retitle, offer cancel
-    document.getElementById('nick-title').textContent = isEdit ? '닉네임 수정' : '닉네임을 정해주세요';
-    document.getElementById('nick-desc').textContent = isEdit ? '새 이름과 아이콘을 고르세요' : '아이콘과 이름을 정해주세요';
+    document.getElementById('nick-title').textContent = isEdit ? '닉네임 수정' : '실명으로 입장해주세요';
+    document.getElementById('nick-desc').innerHTML = isEdit ? '새 이름과 아이콘을 고르세요' : '리더보드·질문에 표시돼요 — <b>꼭 실명</b>으로 부탁드려요 🙏';
     document.getElementById('nickgo').textContent = isEdit ? '저장 →' : '입장하기 →';
     input.value = isEdit && profile ? profile.name : '';
     cancel.classList.toggle('hidden', !isEdit);

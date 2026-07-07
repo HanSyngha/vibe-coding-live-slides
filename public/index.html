@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>바이브 코딩 개론 · Live</title>
+  <link rel="icon" type="image/svg+xml" href="/avatars/salesforce.svg">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -98,10 +99,10 @@
   <div id="nick" class="hidden">
     <div class="nick-card">
       <div class="nemoji">👋</div>
-      <h2 id="nick-title">닉네임을 정해주세요</h2>
-      <p id="nick-desc">질문에 이 이름이 함께 표시돼요</p>
+      <h2 id="nick-title">실명으로 입장해주세요</h2>
+      <p id="nick-desc">리더보드·질문에 표시돼요 — <b>꼭 실명</b>으로 부탁드려요 🙏</p>
       <div class="avatar-row" id="avatar-row"></div>
-      <input id="nickinput" type="text" placeholder="예: 한승하" maxlength="24" autocomplete="off">
+      <input id="nickinput" type="text" placeholder="실명 (예: 한승하)" maxlength="24" autocomplete="off">
       <button class="btn" id="nickgo">입장하기 →</button>
       <button class="nick-cancel hidden" id="nickcancel">취소</button>
     </div>
@@ -113,9 +114,9 @@
       <div class="fb-emoji">📝</div>
       <h2>강의 피드백</h2>
       <p>별점으로 평가해 주세요 (1~5)</p>
-      <div class="fb-q"><label>이 내용이 현업에 도움이 될 것 같나요?</label><div class="stars" data-q="q1"></div></div>
-      <div class="fb-q"><label>난이도는 적절했나요?</label><div class="stars" data-q="q2"></div></div>
-      <div class="fb-q"><label>바이브코딩·Claude Code·AI를 더 알게 되었나요?</label><div class="stars" data-q="q3"></div></div>
+      <div class="fb-q"><label>고객·실무에서 바로 쓸 수 있는 메시지였나요?</label><div class="stars" data-q="q1"></div></div>
+      <div class="fb-q"><label>강사의 SaaS에 대한 관점은 논리적이고 동의할 만했나요?</label><div class="stars" data-q="q2"></div></div>
+      <div class="fb-q"><label>동료에게 추천할 만한 강의였나요?</label><div class="stars" data-q="q3"></div></div>
       <textarea id="fb-text" placeholder="자유롭게 의견을 남겨주세요 (선택)" maxlength="500"></textarea>
       <div class="fb-actions">
         <button class="nick-cancel" id="fb-cancel">닫기</button>
